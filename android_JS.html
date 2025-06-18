@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Signal Ready</title>
+    <title>WebView XSS PoC</title>
     <script>
       window.onload = function () {
         if (window.OSAndroid && OSAndroid.postMessage) {
-          const payload = {
-            event_type: "rendering_complete"
-          };
-          OSAndroid.postMessage(JSON.stringify(payload));
+          OSAndroid.postMessage(JSON.stringify({
+            type: "rendering_complete"
+          }));
         } else {
           alert("OSAndroid interface not available");
         }
@@ -16,7 +15,7 @@
     </script>
   </head>
   <body>
-    <h1>Waiting for OSAndroid...</h1>
+    <h1>Triggering native code...</h1>
   </body>
 </html>
 
