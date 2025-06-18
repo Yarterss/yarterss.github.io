@@ -4,18 +4,18 @@
     <title>WebView XSS PoC</title>
     <script>
       window.onload = function () {
-        if (window.OSAndroid && OSAndroid.postMessage) {
-          OSAndroid.postMessage(JSON.stringify({
+        if (window.Android && Android.postMessage) {
+          Android.postMessage(JSON.stringify({
             type: "rendering_complete"
           }));
         } else {
-          alert("OSAndroid interface not available");
+          alert("Android interface not available");
         }
       };
     </script>
   </head>
   <body>
-    <h1>Triggering native code...</h1>
+    <h1>Triggering native code...1</h1>
   </body>
 </html>
 
