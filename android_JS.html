@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>WebView RCE PoC</title>
-  <script>
-    setTimeout(function () {
-      if (window.OSAndroid && OSAndroid.postMessage) {
-        OSAndroid.postMessage(JSON.stringify({
-          "type": "rendering_complete"
-        }));
-      } else {
-        alert("OSAndroid interface not available");
-      }
-    }, 6000); // Try increasing this if needed (5000ms etc.)
-  </script>
-</head>
-<body>
-  <h1>WebView Native Execution PoC</h1>
-  <p>This page tries to call <code>OSAndroid.postMessage()</code> after 6s.</p>
-</body>
+  <head>
+    <title>Signal Ready</title>
+    <script>
+      window.onload = function () {
+        if (window.OSAndroid && OSAndroid.postMessage) {
+          const payload = {
+            event_type: "rendering_complete"
+          };
+          OSAndroid.postMessage(JSON.stringify(payload));
+        } else {
+          alert("OSAndroid interface not available");
+        }
+      };
+    </script>
+  </head>
+  <body>
+    <h1>Waiting for OSAndroid...</h1>
+  </body>
 </html>
+
 
 
 
