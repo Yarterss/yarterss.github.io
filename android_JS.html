@@ -1,21 +1,15 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>WebView XSS PoC</title>
-    <script>
-      window.onload = function () {
-        if (window.Android && Android.postMessage) {
-          Android.postMessage(JSON.stringify({
-            type: "rendering_complete"
-          }));
-        } else {
-          alert("Android interface not available");
-        }
-      };
-    </script>
-  </head>
   <body>
-    <h1>Triggering native code...1</h1>
+    <script>
+      if (window.OSAndroid && OSAndroid.postMessage) {
+        OSAndroid.postMessage(JSON.stringify({
+          type: "rendering_complete"
+        }));
+      } else {
+        alert("OSAndroid interface not available");
+      }
+    </script>
   </body>
 </html>
 
