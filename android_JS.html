@@ -2,16 +2,20 @@
 <html>
   <body>
     <script>
-      if (window.OSAndroid && OSAndroid.postMessage) {
-        OSAndroid.postMessage(JSON.stringify({
-          type: "rendering_complete"
-        }));
-      } else {
-        alert("OSAndroid interface not available");
+      function attemptCall() {
+        if (window.OSAndroid && typeof OSAndroid.postMessage === 'function') {
+          OSAndroid.postMessage(JSON.stringify({ type: "rendering_complete" }));
+        } else {
+          alert("OSAndroid interface not available");
+        }
       }
+
+      // Wait 3-5 seconds after page load
+      setTimeout(attemptCall, 10000);
     </script>
   </body>
 </html>
+
 
 
 
