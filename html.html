@@ -1,9 +1,24 @@
 <script>
-  setTimeout(() => {
+function waitForInterface(callback, maxTries = 30) {
+  let tries = 0;
+  const interval = setInterval(() => {
+    if (typeof OSAndroid !== 'undefined' && typeof OSAndroid.postMessage === 'function') {
+      clearInterval(interval);
+      callback();
+    } else if (++tries >= maxTries) {
+      clearInterval(interval);
+      alert("OSAndroid still not available after waiting.");
+    }
+  }, 500); // check every 500ms
+}
+
+window.onload = function () {
+  waitForInterface(() => {
     try {
       OSAndroid.postMessage(JSON.stringify({ type: "rendering_complete" }));
     } catch (e) {
-      alert('OSAndroid not ready: ' + e);
+      alert("postMessage failed: " + e);
     }
-  }, 100);
+  });
+};
 </script>
