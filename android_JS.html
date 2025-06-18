@@ -1,7 +1,7 @@
 <script>
   window.onload = function () {
     try {
-      Android.postMessage("dismiss");
+      OSAndroid.postMessage("dismiss");
     } catch (e) {
       alert("Error: " + e.message);
     }
