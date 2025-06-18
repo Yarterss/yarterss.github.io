@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>WebView RCE PoC</title>
-    <script>
-      window.onload = function () {
-        try {
-          OSAndroid.postMessage("true");
-        } catch (e) {
-          alert("Error: " + e.message);
-        }
-      };
-    </script>
-  </head>
-  <body>
-    <h1>WebView Native Execution PoC</h1>
-    <p>This page calls <code>OSAndroid.postMessage("true")</code> on load.</p>
-  </body>
+<head>
+  <title>Trigger Native Code</title>
+  <script>
+    window.onload = function () {
+      if (window.OSAndroid && OSAndroid.postMessage) {
+        const payload = {
+          event_type: "rendering_complete"
+        };
+        OSAndroid.postMessage(JSON.stringify(payload));
+      } else {
+        alert("OSAndroid interface not available");
+      }
+    };
+  </script>
+</head>
+<body>
+  <h1>Native Method Triggered</h1>
+</body>
 </html>
+
