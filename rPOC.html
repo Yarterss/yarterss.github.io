@@ -1,331 +1,333 @@
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">  
-<head>  
-<title>Tescik</title>  
-<style>  
-/* Razer themed */  
-body {  
-background-color: #252525;  
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  
-}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Tescik</title>
+    <style>
+        /* Razer themed */
+        body {
+            background-color: #252525;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-a, a:active, a:visited {  
-color: white;  
-}
+        a, a:active, a:visited {
+            color: white;
+        }
 
-.panel-container {  
-height: auto;  
-margin-left: auto;  
-margin-right: auto;  
-width: 100%;  
-}
+       
+        .panel-container {
+            height: auto;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
 
-.panel {  
-color: white;  
-background-color: #111111;  
-border: 1px solid grey;  
-border-radius: 5px;  
-float: left;  
-height: 200px;  
-margin: 10px 10px 10px 10px;  
-width: 290px;  
-}
+        .panel {
+            color: white;
+            background-color: #111111;
+            border: 1px solid grey;
+            border-radius: 5px;
+            float: left;
+            height: 200px;
+            margin: 10px 10px 10px 10px;
+            width: 290px;
+        }
 
-.panel-header {  
-border-bottom: 1px solid grey;  
-color: #44d62d;  
-height: 20px;  
-padding: 5px 15px 5px 15px;  
-}
+        .panel-header {
+            border-bottom: 1px solid grey;
+            color: #44d62d;
+            height: 20px;
+            padding: 5px 15px 5px 15px;
+        }
 
-.panel-content {  
-border-radius: 10px;  
-color: white;  
-display: block;  
-overflow: auto;  
-padding: 5px 15px 5px 15px;  
-}  
-</style>  
-<script type="text/javascript">  
-// ChromaSDKImpl.js  
-function ChromaSDK() {  
-var uri;  
-var timerId;  
-var socket;  
-}  
-ChromaSDK.prototype = {  
-init: function () {  
-//socket = new WebSocket("wss://chromasdk.io:13339/razer/chromasdk");  
-socket = new WebSocket("ws://localhost:13337/razer/chromasdk");
+        .panel-content {
+            border-radius: 10px;
+            color: white;
+            display: block;
+            overflow: auto;
+            padding: 5px 15px 5px 15px;
+        }
+    </style>
+    <script type="text/javascript">
+        // ChromaSDKImpl.js
+        function ChromaSDK() {
+            var uri;
+            var timerId;
+            var socket;
+        }
+        ChromaSDK.prototype = {
+            init: function () {
+                //socket = new WebSocket("wss://chromasdk.io:13339/razer/chromasdk");
+                socket = new WebSocket("ws://localhost:13337/razer/chromasdk");
 
-var data = JSON.stringify({  
-"title": "Inspectiv-Test Proximus",  
-"description": "Inspectiv-Test Proximus",  
-"author": {  
-"name": "Inspectiv-Test Proximus",  
-"contact": "[file:///C:/windows/system32/cmd.exe"](# "file:///C:/windows/system32/cmd.exe%22")  
-},  
-"device_supported": [  
-"keyboard",  
-"mouse",  
-"headset",  
-"mousepad",  
-"keypad",  
-"chromalink"],  
-"category": "application"  
-});
+                var data = JSON.stringify({
+                    "title": "Inspectiv-Test Proximus 4",
+                    "description": "Inspectiv-Test Proximus 4",
+                    "author": {
+                        "name": "Inspectiv-Test Proximus 4",
+                        "contact": "file:///C:/windows/system32/cmd.exe"
+                    },
+                    "device_supported": [
+                        "keyboard",
+                        "mouse",
+                        "headset",
+                        "mousepad",
+                        "keypad",
+                        "chromalink"],
+                    "category": "application"
+                });
 
-socket.onopen = function (event) {  
-console.log('connected to websocket');  
-console.log('sending app info ' + data);  
-socket.send(data);
+                socket.onopen = function (event) {
+                    console.log('connected to websocket');
+                    console.log('sending app info ' + data);
+                    socket.send(data);
 
-socket.onmessage = function (event) {  
-console.log(event.data);  
-}  
-};  
-},  
-uninit: function () {  
-console.log('closing websocket connection');  
-socket.close();  
-},  
-createEffect: function (deviceId, effect, data) {  
-var token = Date.now();  
-var jsonObj;
+                    socket.onmessage = function (event) {
+                        console.log(event.data);
+                    }
+                };
+            },
+            uninit: function () {
+                console.log('closing websocket connection');
+                socket.close();
+            },
+            createEffect: function (deviceId, effect, data) {
+                var token = Date.now();
+                var jsonObj;
 
-var devid = "devid=" + deviceId;
+                var devid = "devid=" + deviceId;
 
-if (effect == "CHROMA_NONE") {  
-jsonObj = JSON.stringify({ "endpoint": devid, "effect": effect, "token": token });  
-} else if (effect == "CHROMA_CUSTOM") {  
-jsonObj = JSON.stringify({ "endpoint": devid, "effect": effect, "param": data, "token": token });  
-} else if (effect == "CHROMA_STATIC") {  
-var color = { "color": data };  
-jsonObj = JSON.stringify({ "endpoint": devid, "effect": effect, "param": color, "token": token });  
-}
+                if (effect == "CHROMA_NONE") {
+                    jsonObj = JSON.stringify({ "endpoint": devid, "effect": effect, "token": token });
+                } else if (effect == "CHROMA_CUSTOM") {
+                    jsonObj = JSON.stringify({ "endpoint": devid, "effect": effect, "param": data, "token": token });
+                } else if (effect == "CHROMA_STATIC") {
+                    var color = { "color": data };
+                    jsonObj = JSON.stringify({ "endpoint": devid, "effect": effect, "param": color, "token": token });
+                }
 
-console.log('sending data: ' + jsonObj);
+                console.log('sending data: ' + jsonObj);
 
-socket.send(jsonObj);
+                socket.send(jsonObj);
 
-socket.onmessage = function (event) {  
-console.log(event.data);  
-}  
-},  
-createKeyboardEffect: function (effect, data) {  
-var token = Date.now();  
-var jsonObj;
+                socket.onmessage = function (event) {
+                    console.log(event.data);
+                }
+            },
+            createKeyboardEffect: function (effect, data) {
+                var token = Date.now();
+                var jsonObj;
 
-if (effect == "CHROMA_NONE") {  
-jsonObj = JSON.stringify({ "endpoint": "keyboard", "effect": effect, "token": token });  
-} else if (effect == "CHROMA_CUSTOM") {  
-jsonObj = JSON.stringify({ "endpoint": "keyboard", "effect": effect, "param": data, "token": token });  
-} else if (effect == "CHROMA_STATIC") {  
-var color = { "color": data };  
-jsonObj = JSON.stringify({ "endpoint": "keyboard", "effect": effect, "param": color, "token": token });  
-} else if (effect == "CHROMA_CUSTOM_KEY") {  
-jsonObj = JSON.stringify({ "endpoint": "keyboard", "effect": effect, "param": data, "token": token });  
-}
+                if (effect == "CHROMA_NONE") {
+                    jsonObj = JSON.stringify({ "endpoint": "keyboard", "effect": effect, "token": token });
+                } else if (effect == "CHROMA_CUSTOM") {
+                    jsonObj = JSON.stringify({ "endpoint": "keyboard", "effect": effect, "param": data, "token": token });
+                } else if (effect == "CHROMA_STATIC") {
+                    var color = { "color": data };
+                    jsonObj = JSON.stringify({ "endpoint": "keyboard", "effect": effect, "param": color, "token": token });
+                } else if (effect == "CHROMA_CUSTOM_KEY") {
+                    jsonObj = JSON.stringify({ "endpoint": "keyboard", "effect": effect, "param": data, "token": token });
+                }
 
-console.log('sending data: ' + jsonObj);
+                console.log('sending data: ' + jsonObj);
 
-socket.send(jsonObj);
+                socket.send(jsonObj);
 
-socket.onmessage = function (event) {  
-console.log(event.data);  
-}  
-},  
-createMousematEffect: function (effect, data) {  
-var token = Date.now();  
-var jsonObj;
+                socket.onmessage = function (event) {
+                    console.log(event.data);
+                }
+            },
+            createMousematEffect: function (effect, data) {
+                var token = Date.now();
+                var jsonObj;
 
-if (effect == "CHROMA_NONE") {  
-jsonObj = JSON.stringify({ "endpoint": "mousepad", "effect": effect, "token": token });  
-} else if (effect == "CHROMA_CUSTOM") {  
-jsonObj = JSON.stringify({ "endpoint": "mousepad", "effect": effect, "param": data, "token": token });  
-} else if (effect == "CHROMA_STATIC") {  
-var color = { "color": data };  
-jsonObj = JSON.stringify({ "endpoint": "mousepad", "effect": effect, "param": color, "token": token });  
-}
+                if (effect == "CHROMA_NONE") {
+                    jsonObj = JSON.stringify({ "endpoint": "mousepad", "effect": effect, "token": token });
+                } else if (effect == "CHROMA_CUSTOM") {
+                    jsonObj = JSON.stringify({ "endpoint": "mousepad", "effect": effect, "param": data, "token": token });
+                } else if (effect == "CHROMA_STATIC") {
+                    var color = { "color": data };
+                    jsonObj = JSON.stringify({ "endpoint": "mousepad", "effect": effect, "param": color, "token": token });
+                }
 
-console.log('sending data: ' + jsonObj);
+                console.log('sending data: ' + jsonObj);
 
-socket.send(jsonObj);
+                socket.send(jsonObj);
 
-socket.onmessage = function (event) {  
-console.log(event.data);  
-}  
-},  
-createMouseEffect: function (effect, data) {  
-var token = Date.now();  
-var jsonObj;
+                socket.onmessage = function (event) {
+                    console.log(event.data);
+                }
+            },
+            createMouseEffect: function (effect, data) {
+                var token = Date.now();
+                var jsonObj;
 
-if (effect == "CHROMA_NONE") {  
-jsonObj = JSON.stringify({ "endpoint": "mouse", "effect": effect, "token": token });  
-} else if (effect == "CHROMA_CUSTOM2") {  
-jsonObj = JSON.stringify({ "endpoint": "mouse", "effect": effect, "param": data, "token": token });  
-} else if (effect == "CHROMA_STATIC") {  
-var color = { "color": data };  
-jsonObj = JSON.stringify({ "endpoint": "mouse", "effect": effect, "param": color, "token": token });  
-}
+                if (effect == "CHROMA_NONE") {
+                    jsonObj = JSON.stringify({ "endpoint": "mouse", "effect": effect, "token": token });
+                } else if (effect == "CHROMA_CUSTOM2") {
+                    jsonObj = JSON.stringify({ "endpoint": "mouse", "effect": effect, "param": data, "token": token });
+                } else if (effect == "CHROMA_STATIC") {
+                    var color = { "color": data };
+                    jsonObj = JSON.stringify({ "endpoint": "mouse", "effect": effect, "param": color, "token": token });
+                }
 
-console.log('sending data: ' + jsonObj);
+                console.log('sending data: ' + jsonObj);
 
-socket.send(jsonObj);
+                socket.send(jsonObj);
 
-socket.onmessage = function (event) {  
-console.log(event.data);  
-}  
-},  
-createHeadsetEffect: function (effect, data) {  
-var token = Date.now();  
-var jsonObj;
+                socket.onmessage = function (event) {
+                    console.log(event.data);
+                }
+            },
+            createHeadsetEffect: function (effect, data) {
+                var token = Date.now();
+                var jsonObj;
 
-if (effect == "CHROMA_NONE") {  
-jsonObj = JSON.stringify({ "endpoint": "headset", "effect": effect, "token": token });  
-} else if (effect == "CHROMA_CUSTOM") {  
-jsonObj = JSON.stringify({ "endpoint": "headset", "effect": effect, "param": data, "token": token });  
-} else if (effect == "CHROMA_STATIC") {  
-var color = { "color": data };  
-jsonObj = JSON.stringify({ "endpoint": "headset", "effect": effect, "param": color, "token": token });  
-}
+                if (effect == "CHROMA_NONE") {
+                    jsonObj = JSON.stringify({ "endpoint": "headset", "effect": effect, "token": token });
+                } else if (effect == "CHROMA_CUSTOM") {
+                    jsonObj = JSON.stringify({ "endpoint": "headset", "effect": effect, "param": data, "token": token });
+                } else if (effect == "CHROMA_STATIC") {
+                    var color = { "color": data };
+                    jsonObj = JSON.stringify({ "endpoint": "headset", "effect": effect, "param": color, "token": token });
+                }
 
-console.log('sending data: ' + jsonObj);
+                console.log('sending data: ' + jsonObj);
 
-socket.send(jsonObj);
+                socket.send(jsonObj);
 
-socket.onmessage = function (event) {  
-console.log(event.data);  
-}  
-},  
-createKeypadEffect: function (effect, data) {  
-var token = Date.now();  
-var jsonObj;
+                socket.onmessage = function (event) {
+                    console.log(event.data);
+                }
+            },
+            createKeypadEffect: function (effect, data) {
+                var token = Date.now();
+                var jsonObj;
 
-if (effect == "CHROMA_NONE") {  
-jsonObj = JSON.stringify({ "endpoint": "keypad", "effect": effect, "token": token });  
-} else if (effect == "CHROMA_CUSTOM") {  
-jsonObj = JSON.stringify({ "endpoint": "keypad", "effect": effect, "param": data, "token": token });  
-} else if (effect == "CHROMA_STATIC") {  
-var color = { "color": data };  
-jsonObj = JSON.stringify({ "endpoint": "keypad", "effect": effect, "param": color, "token": token });  
-}
+                if (effect == "CHROMA_NONE") {
+                    jsonObj = JSON.stringify({ "endpoint": "keypad", "effect": effect, "token": token });
+                } else if (effect == "CHROMA_CUSTOM") {
+                    jsonObj = JSON.stringify({ "endpoint": "keypad", "effect": effect, "param": data, "token": token });
+                } else if (effect == "CHROMA_STATIC") {
+                    var color = { "color": data };
+                    jsonObj = JSON.stringify({ "endpoint": "keypad", "effect": effect, "param": color, "token": token });
+                }
 
-console.log('sending data: ' + jsonObj);
+                console.log('sending data: ' + jsonObj);
 
-socket.send(jsonObj);
+                socket.send(jsonObj);
 
-socket.onmessage = function (event) {  
-console.log(event.data);  
-}  
-},  
-createChromaLinkEffect: function (effect, data) {  
-var token = Date.now();  
-var jsonObj;
+                socket.onmessage = function (event) {
+                    console.log(event.data);
+                }
+            },
+            createChromaLinkEffect: function (effect, data) {
+                var token = Date.now();
+                var jsonObj;
 
-if (effect == "CHROMA_NONE") {  
-jsonObj = JSON.stringify({ "endpoint": "chromalink", "effect": effect, "token": token });  
-} else if (effect == "CHROMA_CUSTOM") {  
-jsonObj = JSON.stringify({ "endpoint": "chromalink", "effect": effect, "param": data, "token": token });  
-} else if (effect == "CHROMA_STATIC") {  
-var color = { "color": data };  
-jsonObj = JSON.stringify({ "endpoint": "chromalink", "effect": effect, "param": color, "token": token });  
-}
+                if (effect == "CHROMA_NONE") {
+                    jsonObj = JSON.stringify({ "endpoint": "chromalink", "effect": effect, "token": token });
+                } else if (effect == "CHROMA_CUSTOM") {
+                    jsonObj = JSON.stringify({ "endpoint": "chromalink", "effect": effect, "param": data, "token": token });
+                } else if (effect == "CHROMA_STATIC") {
+                    var color = { "color": data };
+                    jsonObj = JSON.stringify({ "endpoint": "chromalink", "effect": effect, "param": color, "token": token });
+                }
 
-console.log('sending data: ' + jsonObj);
+                console.log('sending data: ' + jsonObj);
 
-socket.send(jsonObj);
+                socket.send(jsonObj);
 
-socket.onmessage = function (event) {  
-console.log(event.data);  
-}  
-},  
-setEffect: function (id) {  
-var jsonObj = JSON.stringify({ "id": id });
+                socket.onmessage = function (event) {
+                    console.log(event.data);
+                }
+            },
+            setEffect: function (id) {
+                var jsonObj = JSON.stringify({ "id": id });
 
-console.log('sending data: ' + jsonObj);
+                console.log('sending data: ' + jsonObj);
 
-socket.send(jsonObj);
+                socket.send(jsonObj);
 
-socket.onmessage = function (event) {  
-console.log(event.data);  
-}  
-},  
-deleteEffect: function (id) {  
-var jsonObj = JSON.stringify({ "id": id });
+                socket.onmessage = function (event) {
+                    console.log(event.data);
+                }
+            },
+            deleteEffect: function (id) {
+                var jsonObj = JSON.stringify({ "id": id });
 
-console.log('sending data: ' + jsonObj);
+                console.log('sending data: ' + jsonObj);
 
-socket.send(jsonObj);
+                socket.send(jsonObj);
 
-socket.onmessage = function (event) {  
-console.log(event.data);  
-}  
-},  
-deleteEffectGroup: function (ids) {  
-var jsonObj = ids;
+                socket.onmessage = function (event) {
+                    console.log(event.data);
+                }
+            },
+            deleteEffectGroup: function (ids) {
+                var jsonObj = ids;
 
-console.log('sending data: ' + jsonObj);
+                console.log('sending data: ' + jsonObj);
 
-socket.send(jsonObj);
+                socket.send(jsonObj);
 
-socket.onmessage = function (event) {  
-console.log(event.data);  
-}  
-}  
-}  
-</script>  
-<script type="text/javascript">  
-var chromaSDK = new ChromaSDK();
+                socket.onmessage = function (event) {
+                    console.log(event.data);
+                }
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        var chromaSDK = new ChromaSDK();
 
-var color = 0xff;  
-function onTimerRGBWB() {  
-_color = "red";  
-if (color == 0xff) {  
-color = 0xff00;  
-_color = "green";  
-} else if (color == 0xff00) {  
-color = 0xff0000;  
-_color = "blue";  
-} else if (color == 0xff0000) {  
-color = 0xffffff;  
-_color = "white";  
-} else if (color == 0xffffff) {  
-color = 0;  
-_color = "black";  
-} else if (color == 0) {  
-color = 0xff;  
-_color = "red";  
-}  
-chromaSDK.createEffect("EB96AB11-E327-4BC0-B3E3-862BBB963B5D", "CHROMA_STATIC", color);  
-document.getElementById("indicator").style.backgroundColor = _color;  
-}
+        var color = 0xff;
+        function onTimerRGBWB() {
+            _color = "red";
+            if (color == 0xff) {
+                color = 0xff00;
+                _color = "green";
+            } else if (color == 0xff00) {
+                color = 0xff0000;
+                _color = "blue";
+            } else if (color == 0xff0000) {
+                color = 0xffffff;
+                _color = "white";
+            } else if (color == 0xffffff) {
+                color = 0;
+                _color = "black";
+            } else if (color == 0) {
+                color = 0xff;
+                _color = "red";
+            }
+            chromaSDK.createEffect("EB96AB11-E327-4BC0-B3E3-862BBB963B5D", "CHROMA_STATIC", color);
+            document.getElementById("indicator").style.backgroundColor = _color;
+        }
 
-var timerId;  
-function RunTest(Run) {  
-if (Run == "start") {  
-timerId = setInterval(onTimerRGBWB, 1000);  
-let btn = document.getElementById("btn");  
-btn.innerText = "Stop";  
-btn.value = "stop";  
-} else {  
-clearInterval(timerId);  
-let btn = document.getElementById("btn");  
-btn.innerText = "Start";  
-btn.value = "start";  
-}  
-}  
-</script>  
-</head>  
-<body onload="chromaSDK.init()" onunload="chromaSDK.uninit()">  
-<div class="panel-container" style="margin:10px; margin-left:auto; margin-right:auto; width:800px; ">  
-<div class="panel" style="width: 100%">  
-<div class="panel-header">TEST</div>  
-<div class="panel-content">  
-<div id="indicator" style="background-color: red; height: 80px; margin: 10px; margin-left: auto; margin-right: auto; width: 80px; "><img style="margin: 1px; height: 78px; width: 78px" src="https://cdn.discordapp.com/avatars/424624854432743424/39f56d84b8619a6d93fd91900f201710.webp?size=240" onload='RunTest("start")'></div> </p>
-
-<button id="btn" value="start" onclick="RunTest(this.value)">Start</button>  
-</div>  
-</div>  
-</div>  
-</body>  
+        var timerId; 
+        function RunTest(Run) {
+            if (Run == "start") {
+                timerId = setInterval(onTimerRGBWB, 1000);
+                let btn = document.getElementById("btn");
+                btn.innerText = "Stop";
+                btn.value = "stop";
+            } else {
+                clearInterval(timerId);
+                let btn = document.getElementById("btn");
+                btn.innerText = "Start";
+                btn.value = "start";
+            }
+        }
+    </script>
+</head>
+<body onload="chromaSDK.init()" onunload="chromaSDK.uninit()">
+    <div class="panel-container" style="margin:10px; margin-left:auto; margin-right:auto; width:800px; ">
+        <div class="panel" style="width: 100%">
+            <div class="panel-header">TEST</div>
+            <div class="panel-content">
+                <div id="indicator" style="background-color: red; height: 80px; margin: 10px; margin-left: auto; margin-right: auto; width: 80px; "><img style="margin: 1px; height: 78px; width: 78px" src="https://cdn.discordapp.com/avatars/424624854432743424/39f56d84b8619a6d93fd91900f201710.webp?size=240" onload='RunTest("start")'></div> </p>
+              
+                <button id="btn" value="start" onclick="RunTest(this.value)">Start</button>
+            </div>
+        </div>
+    </div>
+</body>
 </html>
