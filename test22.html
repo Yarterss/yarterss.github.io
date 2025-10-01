@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Login Page</title>
+  <style>
+    body {
+  font-family: system-ui, sans-serif;
+  background-color: #f9f9f9; 
+  color: #222;              
+  max-width: 640px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+    label { display:block; margin-top: 12px; }
+    input { padding: 8px; width: 100%; box-sizing: border-box; }
+    button { margin-top: 12px; padding: 10px 14px; }
+    pre { background:#f4f4f4; padding:12px; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <h1>Login</h1>
+  <form id="credForm">
+    <label>
+      Email
+      <input type="email" id="email" required>
+    </label>
+    <label>
+      Password
+      <input type="password" id="password" required>
+    </label>
+    <button type="submit">Send</button>
+  </form>
+
+  <h3>Server response</h3>
+  <pre id="output">No response yet.</pre>
+
+  <script>
+    const NGROK_URL = '<Server_url>';
+    const ENDPOINT = NGROK_URL + '/login';
+
+    document.getElementById('credForm').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const out = document.getElementById('output');
+      out.textContent = 'Sending...';
+
+      try {
+        const resp = await fetch(ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'yes' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await resp.json();
+
+        if (!resp.ok) {
+          out.textContent = `Error ${resp.status}: ${JSON.stringify(data, null, 2)}`;
+          return;
+        }
+
+      
+        out.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        out.textContent = 'Network error: ' + err.message;
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
