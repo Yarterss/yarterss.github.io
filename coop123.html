@@ -1,260 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>CSRF SameSite Lab</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root{
-      --bg:#f6f7f9;
-      --panel:#ffffff;
-      --text:#1f2937;
-      --muted:#6b7280;
-      --border:#e5e7eb;
-      --accent:#2563eb;
-      --ok:#15803d;
-      --warn:#b45309;
-      --err:#b91c1c;
-      --radius:12px;
-      --shadow:0 8px 24px rgba(0,0,0,.06);
-    }
-
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:var(--bg);
-      color:var(--text);
-      line-height:1.5;
-    }
-
-    /* NAV (shared lab header) */
-    .nav{
-      background:#fff;
-      border-bottom:1px solid var(--border);
-      position:sticky;
-      top:0;
-      z-index:10;
-    }
-    .nav-inner{
-      max-width:1100px;
-      margin:0 auto;
-      padding:14px 20px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:600;
-      font-size:16px;
-    }
-    .brand a{
-      text-decoration:none;
-      color:var(--text);
-      border:1px solid var(--border);
-      padding:6px 10px;
-      border-radius:10px;
-      background:#fff;
-      font-size:13px;
-      font-weight:500;
-      transition:border-color .15s ease, transform .15s ease;
-    }
-    .brand a:hover{border-color:var(--accent); transform:translateY(-1px)}
-    .tabs{
-      display:flex;
-      gap:6px;
-      flex-wrap:wrap;
-    }
-    .tab{
-      padding:6px 10px;
-      border-radius:8px;
-      font-size:13px;
-      text-decoration:none;
-      border:1px solid var(--border);
-      color:var(--text);
-      background:#fff;
-      transition:transform .12s ease, border-color .12s ease;
-      white-space:nowrap;
-    }
-    .tab:hover{border-color:rgba(37,99,235,.35); transform:translateY(-1px)}
-    .tab-active{
-      background:var(--accent);
-      color:#fff;
-      border-color:transparent;
-    }
-
-    /* PAGE */
-    .wrap{max-width:560px; margin:28px auto; padding:0 18px;}
-    .card{
-      background:var(--panel);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:18px;
-      box-shadow:var(--shadow);
-    }
-    h1{margin:0; font-size:16px;}
-    .muted{color:var(--muted); font-size:13px; margin:6px 0 0;}
-    .divider{height:1px; background:var(--border); margin:14px 0;}
-    .row{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:10px;}
-    .row.tight{margin-top:0}
-
-    /* pills/badges */
-    .pill{
-      font-size:11px;
-      padding:3px 8px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:#f9fafb;
-      color:var(--muted);
-      white-space:nowrap;
-    }
-    .pill.ok{
-      border-color: rgba(21,128,61,.25);
-      background: rgba(21,128,61,.06);
-      color: var(--ok);
-    }
-    .pill.warn{
-      border-color: rgba(180,83,9,.25);
-      background: rgba(180,83,9,.06);
-      color: var(--warn);
-    }
-    .pill.err{
-      border-color: rgba(185,28,28,.25);
-      background: rgba(185,28,28,.06);
-      color: var(--err);
-    }
-
-    /* Nice mode buttons (restored) */
-    a.mode-btn{
-      text-decoration:none;
-      color:var(--text);
-      font-size:13px;
-      padding:8px 10px;
-      border-radius:10px;
-      border:1px solid var(--border);
-      background:#fff;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      transition:border-color .15s ease, transform .15s ease;
-    }
-    a.mode-btn:hover{border-color: rgba(37,99,235,.45); transform:translateY(-1px);}
-    a.mode-btn.active{
-      background: var(--accent);
-      color:#fff;
-      border-color: transparent;
-    }
-
-    .box{
-      margin-top:12px;
-      padding:12px;
-      border-radius:12px;
-      border:1px solid rgba(0,0,0,.06);
-      background:#fafafa;
-    }
-    .box .k{font-size:12px; color:var(--muted); margin:0 0 6px;}
-    .box .v{
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size:13px;
-      word-break:break-word;
-      white-space:pre-wrap;
-    }
-
-    label{display:block; font-size:13px; color:var(--muted); margin:0 0 6px;}
-    input{
-      width:100%;
-      padding:10px 12px;
-      border:1px solid var(--border);
-      border-radius:10px;
-      font-size:13px;
-      outline:none;
-      background:#fff;
-    }
-    input:focus{border-color: rgba(37,99,235,.55);}
-
-    button{
-      appearance:none;
-      border:1px solid var(--border);
-      background:#fff;
-      color:var(--text);
-      padding:8px 10px;
-      border-radius:10px;
-      font-size:13px;
-      cursor:pointer;
-      transition:border-color .15s ease, transform .15s ease;
-    }
-    button.primary{
-      background: var(--accent);
-      color:#fff;
-      border-color: transparent;
-    }
-    button:hover{border-color: rgba(37,99,235,.45); transform:translateY(-1px);}
-    code{font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:12px;}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COOP Misconfiguration PoC</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; line-height: 1.6; max-width: 700px; margin: auto; background-color: #f4f7f9; }
+        .container { border: 1px solid #d1d9e0; padding: 30px; border-radius: 12px; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; flex-direction: column;}
+        h2 { color: #24292e; margin-top: 0; }
+        label { font-weight: 600; margin-bottom: 8px; color: #444; }
+        input[type="text"] { padding: 12px; margin: 10px 0 20px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
+        button { background: #2ea44f; color: white; border: none; padding: 12px 20px; cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 16px; transition: background 0.2s; }
+        button:hover { background: #2c974b; }
+        .status { margin-top: 20px; font-weight: bold; padding: 10px; border-radius: 6px; }
+        .hidden { display: none; }
+        .success-box { border-left: 5px solid #d9534f; padding: 30px; background: white; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    </style>
 </head>
-
 <body>
-  <!-- Shared header/navigation -->
-  <nav class="nav">
-    <div class="nav-inner">
-      <div class="brand">
-        <span>CSRF Lab</span>
-        <a href="/csrf">Back to CSRF Hub</a>
-        <a href="/dashboard">Dashboard</a>
-      </div>
 
-      <div class="tabs">
-        <a href="/csrf/basics" class="tab">Basics</a>
-        <a href="/csrf/samesite" class="tab tab-active">SameSite</a>
-        <a href="/csrf/jwt" class="tab">Jwt/CSRF token</a>
-        <a href="/csrf/content-type" class="tab">Content-Type</a>
-        <a href="/csrf/custom-headers" class="tab">tbd</a>
-      </div>
-    </div>
-  </nav>
+    <div id="mainView">
+        <h2>COOP Misconfiguration Tester</h2>
+        <p>This tool tests if a target website is vulnerable to window hijacking via <strong>Cross-Origin Opener Policy</strong> misconfiguration.</p>
 
-  <main class="wrap">
-    <div class="card">
-      <h1>Profile: Change Email (Samesite)</h1>
-
-      <div class="divider"></div>
-
-      <div class="row" style="justify-content:space-between;">
-        <div class="row tight">
-          <a class="mode-btn {{MODE_STRICT_CLASS}}" href="/csrf/samesite/cookie?mode=strict">SameSite=Strict</a>
-          <a class="mode-btn {{MODE_LAX_CLASS}}" href="/csrf/samesite/cookie?mode=lax">SameSite=Lax</a>
-          <a class="mode-btn {{MODE_NONE_CLASS}}" href="/csrf/samesite/cookie?mode=none">SameSite=None</a>
+        <div class="container">
+            <label for="targetUrl">Target Website URL:</label>
+            <input type="text" id="targetUrl" placeholder="https://example.com" value="https://">
+            
+            <button onclick="runPoC()">Run Vulnerability Test</button>
+            <div id="status" class="status"></div>
         </div>
-        <!-- These placeholders assume your server sets them; keep as-is -->
-        <span class="pill {{AUTH_BADGE_CLASS}}">{{AUTH_STATUS}}</span>
-      </div>
-
-      <div class="box" aria-live="polite">
-        <div class="k">Current email</div>
-        <div class="v" id="currentEmail">{{CURRENT_EMAIL}}</div>
-      </div>
-
-      <div class="divider"></div>
-
-      <!-- State-changing action: plain HTML form POST -->
-      <form action="/csrf/samesite/victim" method="POST">
-        <label for="email">New email</label>
-        <input id="email" name="email" type="email" placeholder="attacker@evil.example" autocomplete="off" />
-
-        <div class="row">
-          <button class="primary" type="submit">Save</button>
-        </div>
-      </form>
-
-      <p class="muted" style="margin-top:12px;">
-        Selected mode: <code>{{MODE}}</code>
-      </p>
     </div>
-  </main>
+
+    <div id="successView" class="hidden">
+        <div class="success-box">
+            <h1 style="color: #d9534f;">VULNERABILITY DETECTED</h1>
+            <p><strong>Status:</strong> Successfully hijacked window location.</p>
+            <p>This domain is confirmed vulnerable to <strong>COOP flow misconfiguration</strong>. Because the target site does not set a strict <code>Cross-Origin-Opener-Policy</code>, a malicious site can:</p>
+            <ul>
+                <li>Maintain a persistent reference to this window.</li>
+                <li>Forcefully redirect this window to any URL.</li>
+                <li>Perform Cross-Origin State Leaks (XS-Leaks).</li>
+            </ul>
+            <p><em>To fix this, the target server must send the following header:</em><br>
+            <code>Cross-Origin-Opener-Policy: same-origin</code></p>
+        </div>
+    </div>
+
+    <script>
+        // Detection Logic
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('success')) {
+                document.getElementById('mainView').classList.add('hidden');
+                document.getElementById('successView').classList.remove('hidden');
+                document.body.style.backgroundColor = "#fff5f5";
+            }
+        };
+
+        function runPoC() {
+            const target = document.getElementById('targetUrl').value;
+            const statusDiv = document.getElementById('status');
+            
+            // Fix for File Not Found: Use current full URL and check if it already has a query string
+            const currentUrl = window.location.href.split('?')[0];
+            const successUrl = currentUrl + "?success=true";
+
+            if (!target.startsWith('http')) {
+                alert("Please enter a valid URL (including http:// or https://)");
+                return;
+            }
+
+            statusDiv.style.backgroundColor = "#e8f0fe";
+            statusDiv.style.color = "#1a73e8";
+            statusDiv.innerText = "Opening target and establishing link...";
+
+            // Open window with noopener=no to attempt relationship retention
+            const victimWindow = window.open(target, 'testWindow', 'width=1000,height=700,noopener=no');
+
+            if (!victimWindow) {
+                statusDiv.style.backgroundColor = "#fff0f0";
+                statusDiv.style.color = "#d93025";
+                statusDiv.innerText = "Error: Popup blocked! Allow popups to run the test.";
+                return;
+            }
+
+            setTimeout(() => {
+                try {
+                    // Navigate the target window back to this PoC
+                    victimWindow.location.href = successUrl;
+                    
+                    statusDiv.style.backgroundColor = "#e6fffa";
+                    statusDiv.style.color = "#2ea44f";
+                    statusDiv.innerText = "Redirect command sent! Observe the opened window.";
+                } catch (e) {
+                    statusDiv.style.backgroundColor = "#fff0f0";
+                    statusDiv.style.color = "#d93025";
+                    statusDiv.innerText = "Blocked: The browser prevented the cross-origin redirect (Target is likely SECURE).";
+                    console.error("Navigation Blocked:", e);
+                }
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
