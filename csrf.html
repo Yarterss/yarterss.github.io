@@ -1,18 +1,17 @@
 <html>
   <body>
     <script>
-      // <-- Replace these with the task IDs you want to mark as complete -->
-      const noteIDs = [28715264,28715277]; // Replace with your target task IDs
-      
-      const actionUrl = "https://inspectivgpt.filevinegov.com/api/notes/";
-      const delayMs = 1000; // ms between requests
+      // <-- Replace these with the ticketIDs you want to move-->
+      const ticketIDs = [67694]; 
 
-      noteIDs.forEach((noteID, i) => {
+      const actionUrl = "https://stagingdev.pestroutes.com/resources/delegates/customerDelegate.php";
+      const delayMs = 500; // ms between requests
+
+      ticketIDs.forEach((ticketID, i) => {
         setTimeout(() => {
           const form = document.createElement("form");
-          form.action = `${actionUrl}${noteID}/complete`;
+          form.action = actionUrl;
           form.method = "POST";
-          form.target = "_blank"; // Opens in new tabs
 
           const addHidden = (name, value) => {
             const input = document.createElement("input");
@@ -22,12 +21,9 @@
             form.appendChild(input);
           };
 
-          // Note: If this endpoint requires any parameters in the body,
-          // add them here using addHidden(). For example:
-          // addHidden("parameterName", "parameterValue");
-          
-          // If the endpoint accepts an empty POST body, no hidden fields are needed
-          // but we'll keep the form structure ready for any parameters
+          addHidden("action", "saveAdditionalNotes");
+          addHidden("ticketID", ticketID);
+		  addHidden("additionalNotes", "PAID!!");
 
           document.body.appendChild(form);
           form.submit();
