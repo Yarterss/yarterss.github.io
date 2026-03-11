@@ -12,7 +12,7 @@ async function createAdmin() {
   console.log("Request URL:", url);
 
   // your existing request logic continues here
-}
+
 
   const params = new URLSearchParams();
 
