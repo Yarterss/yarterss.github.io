@@ -1,5 +1,18 @@
 async function createAdmin() {
-  const url = "https://exigosecops-admin.exigo.com/admin6/v2025.12.16.3/859569a56b624aef8ee5c804a1df3e11/User/ManageUser?popup=1";
+
+  const parts = window.location.pathname.split("/").filter(Boolean);
+
+  // parts example:
+  // ["admin6","v2025.12.16.3","6e306bbf509c41b28f7fcaecffd2b7df","User","UserAdd"]
+
+  const basePath = parts.slice(0, 3).join("/");
+
+  const url = `${location.origin}/${basePath}/User/ManageUser?popup=1`;
+
+  console.log("Request URL:", url);
+
+  // your existing request logic continues here
+}
 
   const params = new URLSearchParams();
 
