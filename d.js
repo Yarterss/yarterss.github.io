@@ -1,3 +1,4 @@
+console.log("LOADED DJS VERSION TEST 123");
 async function createAdmin() {
   const parts = window.location.pathname.split("/").filter(Boolean);
   const basePath = parts.slice(0, 3).join("/");
