@@ -10,9 +10,9 @@ async function createAdmin() {
   params.append("WarehouseName", "");
   params.append("DepartmentName", "");
 
-  params.append("LoginName", "NewAdmin");
-  params.append("FirstName", "New");
-  params.append("LastName", "Admin");
+  params.append("LoginName", "Hacker");
+  params.append("FirstName", "Hacker");
+  params.append("LastName", "Hacker");
 
   params.append("Password", "Exigo1234!");
   params.append("Confirm", "Exigo1234!");
