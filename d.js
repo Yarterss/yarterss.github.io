@@ -65,4 +65,6 @@ async function createAdmin() {
   console.log("status:", r.status);
   console.log(text);
 
+}
+
 createAdmin();
