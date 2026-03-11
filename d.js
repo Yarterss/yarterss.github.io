@@ -13,9 +13,9 @@ async function createAdmin() {
   params.append("PasswordAge", "1/1/0001 12:00:00 AM");
   params.append("WarehouseName", "");
   params.append("DepartmentName", "");
-  params.append("LoginName", "Hacker");
-  params.append("FirstName", "Hacker");
-  params.append("LastName", "Hacker");
+  params.append("LoginName", "Hacker2");
+  params.append("FirstName", "Hacker2");
+  params.append("LastName", "Hacker2");
   params.append("Password", "Exigo1234!");
   params.append("Confirm", "Exigo1234!");
   params.append("Warehouse", "1");
