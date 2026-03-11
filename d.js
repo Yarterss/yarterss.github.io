@@ -64,6 +64,5 @@ async function createAdmin() {
   const text = await r.text();
   console.log("status:", r.status);
   console.log(text);
-}
 
 createAdmin();
