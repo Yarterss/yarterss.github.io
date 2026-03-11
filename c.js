@@ -2,11 +2,6 @@
   const token =
     document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
-
-  const username =
-    document.querySelector('#ProfileInfo_LoginName-input')?.value ||
-    document.querySelector('input[name="ProfileInfo.LoginName"]')?.value;
-
   if (!token) {
     console.error("Missing __RequestVerificationToken");
     return;
