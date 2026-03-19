@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InspectivTest Login</title>
+  <style>
+    :root {
+      --bg: #0f1720;
+      --panel: #121d28;
+      --panel-2: #162331;
+      --border: #223243;
+      --border-soft: #1b2a38;
+      --text: #e6eef8;
+      --muted: #8fa3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --input-bg: #0d1620;
+      --danger-dot: #ff7b7b;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(59,130,246,0.08), transparent 25%),
+        linear-gradient(180deg, #0c141d 0%, #0f1720 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    .page {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 78px;
+      background: #0b131b;
+      border-right: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 18px 0;
+      gap: 18px;
+    }
+
+    .sidebar .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #1d2a39, #0f1720);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      color: #a9bdd3;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .sidebar .nav-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #7f95aa;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .sidebar .nav-icon:hover,
+    .sidebar .nav-icon.active {
+      background: #111c27;
+      border-color: var(--border);
+      color: #d8e5f2;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      height: 78px;
+      border-bottom: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      background: rgba(10, 18, 25, 0.55);
+      backdrop-filter: blur(8px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .brand .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--danger-dot);
+      box-shadow: 0 0 0 4px rgba(255, 123, 123, 0.12);
+    }
+
+    .login-shell {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 32px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 430px;
+      background: linear-gradient(180deg, rgba(20,31,43,0.98), rgba(16,25,35,0.98));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 30px;
+    }
+
+    .login-card h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .login-card p {
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #dce7f3;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      height: 48px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--input-bg);
+      color: var(--text);
+      padding: 0 14px;
+      outline: none;
+      font-size: 14px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .input-wrap input::placeholder {
+      color: #6f8499;
+    }
+
+    .input-wrap input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.14);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 8px 0 22px;
+      gap: 12px;
+    }
+
+    .checkbox {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+    }
+
+    .link {
+      color: #9fc2ff;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+
+    .btn {
+      width: 100%;
+      height: 48px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--accent);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.08s ease;
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .footer-text {
+      margin-top: 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer-text a {
+      color: #cfe0ff;
+      text-decoration: none;
+    }
+
+    .footer-text a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        display: none;
+      }
+
+      .topbar {
+        padding: 0 18px;
+      }
+
+      .brand {
+        font-size: 18px;
+      }
+
+      .login-shell {
+        padding: 20px;
+      }
+
+      .login-card {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="logo">I</div>
+      <button class="nav-icon active">⌂</button>
+      <button class="nav-icon">◫</button>
+      <button class="nav-icon">⚙</button>
+      <button class="nav-icon">?</button>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="brand">
+          <span class="dot"></span>
+          <span>InspectivTest</span>
+        </div>
+      </header>
+
+      <section class="login-shell">
+        <div class="login-card">
+          <h1>Sign in</h1>
+          <p>Access your application dashboard using your email and password.</p>
+
+          <form action="/login" method="POST">
+            <div class="field">
+              <label for="email">Email address</label>
+              <div class="input-wrap">
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="name@company.com"
+                  required
+                  autocomplete="email"
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="password">Password</label>
+              <div class="input-wrap">
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Enter your password"
+                  required
+                  autocomplete="current-password"
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <label class="checkbox">
+                <input type="checkbox" name="remember_me" />
+                <span>Remember me</span>
+              </label>
+
+              <a class="link" href="/forgot-password">Forgot password?</a>
+            </div>
+
+            <button class="btn" type="submit">Sign in</button>
+          </form>
+
+          <div class="footer-text">
+            Don’t have an account? <a href="/register">Create one</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
