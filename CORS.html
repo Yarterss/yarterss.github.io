@@ -3,7 +3,7 @@
 <script>
 var req = new XMLHttpRequest();
 req.onload = reqListener;
-req.open('GET','https://gap-test.ftr.com:8443/geoserver/gap/wms?srs=EPSG%3A3857&request=GetFeatureInfo&version=1.1.1&layers=gap%3Aaburl%2Cgap%3Asl%2Cgap%3Awcb&styles=gap%3Aresidual_location_cost%2Cgap%3Aservice_location_download%2Cgap%3Awc_boundary&bbox=-10959035.380389268%2C3383217.448890248%2C-10880954.955359975%2C3432481.1140096434&width=2043&height=1289&query_layers=gap%3Aaburl%2Cgap%3Asl%2Cgap%3Awcb&info_format=application%2Fjson&feature_count=1000&x=1058&y=1243&buffer=12',true);
+req.open('GET','https://gap-test.ftr.com:8443/geoserver/gap/wms?srs=EPSG%3A3857&request=GetFeatureInfo&version=1.1.1&layers=gap%3Acts%2Cgap%3Aaburl%2Cgap%3Asl%2Cgap%3Aaml&bbox=-13553084.09361627%2C4633112.650438662%2C-13475003.668586977%2C4682376.315558719&width=2043&height=1289&query_layers=gap%3Acts%2Cgap%3Aaburl%2Cgap%3Asl%2Cgap%3Aaml&info_format=application%2Fjson&feature_count=1000&x=753&y=557&buffer=12',true);
 req.withCredentials = true;
 req.send();
 function reqListener() {
