@@ -1,16 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <title>Website is vulnerable to Clickjacking!</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { display: flex; flex-direction: column; height: 100vh; font-family: sans-serif; }
-    h1 { padding: 10px 16px; background: #c0392b; color: white; font-size: 16px; flex-shrink: 0; }
-    iframe { flex: 1; width: 100%; border: none; }
-  </style>
-</head>
-<body>
-  <h1>Website is vulnerable to Clickjacking!</h1>
-  <iframe src="https://stg.intuitioneducation.org/"></iframe>
-</body>
+  <head><title>Clickjacking PoC - stg.intuitioneducation.org</title></head>
+  <body>
+    <h2>If the application renders below, it is framable by any attacker origin.</h2>
+    <iframe
+      src="https://stg.intuitioneducation.org/"
+      width="1200" height="800"
+      style="opacity:0.6; border:2px solid red;">
+    </iframe>
+  </body>
 </html>
