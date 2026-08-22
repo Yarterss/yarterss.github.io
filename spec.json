@@ -1,5 +1,10 @@
 {
-  "openapi": "3.0.0",
-  "info": {"title": "API", "version": "1.0"},
-  "paths": {}
+  "swagger": "2.0",
+  "info": {
+    "title": "API",
+    "description": "<img src=x onerror=alert('XSS')>",
+    "version": "1.0"
+  },
+  "paths": {},
+  "host": "localhost"
 }
