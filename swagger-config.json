@@ -1,12 +1,3 @@
 {
-  "urls": [
-    {
-      "name": "<img src=x onerror=alert('XSS')>",
-      "url": "https://yarterss.github.io/spec.json"
-    },
-    {
-      "name": "DMAT API",
-      "url": "https://yarterss.github.io/spec.json"
-    }
-  ]
+  "url": "https://yarterss.github.io/spec.json"
 }
