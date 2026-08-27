@@ -1,6 +1,67 @@
 <html>
 <body>
-<h1>Customer Site</h1>
-<script src="https://192cc8e0-f791-49f6-8157-52126a483ebd.redfastlabs.com/assets/redfast.js"></script>
+<h1>Customer Test Page</h1>
+<pre id="log"></pre>
+<script>
+function log(msg) {
+  document.getElementById('log').textContent += msg + '\n';
+  console.log(msg);
+}
+
+window.addEventListener('error', function(e) {
+  log('ERROR: ' + e.message + ' at ' + e.filename);
+});
+
+log('1. Page loaded, adding widget script...');
+var s = document.createElement('script');
+s.src = 'https://192cc8e0-f791-49f6-8157-52126a483ebd.redfastlabs.com/assets/redfast.js';
+s.onload = function() {
+  log('2. redfast.js loaded');
+  log('   window.Redfast: ' + typeof window.Redfast);
+  log('   window.RF: ' + typeof window.RF);
+
+  var checks = 0;
+  var interval = setInterval(function() {
+    checks++;
+    var rfDiv = document.getElementById('redfast-app');
+    var hasListeners = window.RF && typeof window.RF.listenerCount === 'function' && window.RF.listenerCount('actions');
+    log('3. Check ' + checks + ': div=' + !!rfDiv + ' listeners=' + hasListeners);
+
+    if (hasListeners > 0 || checks > 10) {
+      clearInterval(interval);
+      log('4. Calling Redfast.identify("test-user")...');
+      try {
+        Redfast.identify('test-user');
+        log('5. identify() called successfully');
+      } catch(e) {
+        log('5. identify() error: ' + e.message);
+      }
+
+      setTimeout(function() {
+        log('6. Post-identify check:');
+        log('   RF.actions: ' + JSON.stringify(window.RF && window.RF.actions ? Object.keys(window.RF.actions) : 'none'));
+        log('   Redfast.userId: ' + (window.Redfast && window.Redfast.userId));
+        log('   Redfast.rfApp: ' + (window.Redfast && window.Redfast.rfApp));
+        log('   Redfast.pingId: ' + (window.Redfast && window.Redfast.pingId));
+
+        if (!hasListeners) {
+          log('7. No listeners found after 10 checks - trying direct ping...');
+          try {
+            Redfast.ping();
+            log('   ping() called');
+          } catch(e) {
+            log('   ping() error: ' + e.message);
+          }
+        }
+      }, 3000);
+    }
+  }, 1000);
+};
+s.onerror = function(e) {
+  log('FAILED to load redfast.js: ' + JSON.stringify(e));
+};
+document.head.appendChild(s);
+</script>
 </body>
 </html>
+
