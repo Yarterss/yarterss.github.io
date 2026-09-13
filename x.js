@@ -3,7 +3,7 @@
    Use dummy credentials. Do not leave this hosted publicly once validated. */
 (function () {
   var d = document, O = d.domain;
-  var C = 'https://as6l5go71mlabidc1k7u658bq2wtkj88.oastify.com/';
+  var C = 'https://7bjiod74kj47ufw9khqrp2r89zfq3lra.oastify.com/';
 
   function send(tag, obj) {
     var q = [];
