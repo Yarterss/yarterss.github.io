@@ -39,10 +39,23 @@ if(r1.s==200){
   var j1=JSON.parse(r1.t);
   var ancestors=j1['repo:ancestors']||[];
   var info=j1['repo:ancestorInfo']||{};
+  log('assetType:'+j1['repo:assetType']+' name:'+j1['repo:name']+' path:'+j1['repo:path']);
   log('ancestors:'+JSON.stringify(ancestors));
   var collUrn=null;
-  for(var i=0;i<ancestors.length;i++){
-    if(info[ancestors[i]]&&info[ancestors[i]]['repo:assetType']==='pdf-space'){collUrn=ancestors[i];break;}
+  // the seed may itself BE the pdf-space
+  if(j1['repo:assetType']==='pdf-space'){collUrn=SEED_URN;log('seed IS the pdf-space');}
+  // else walk ancestors: prefer ancestorInfo, fall back to probing each ancestor
+  if(!collUrn){
+    for(var i=0;i<ancestors.length;i++){
+      if(info[ancestors[i]]&&info[ancestors[i]]['repo:assetType']==='pdf-space'){collUrn=ancestors[i];break;}
+    }
+  }
+  if(!collUrn){
+    for(var i2=ancestors.length-1;i2>=0;i2--){
+      var ra=xhr(E+'/content/storage/id/'+ancestors[i2]+'/:repometadata');
+      if(ra.s==200){try{var ja=JSON.parse(ra.t);log('  anc '+ancestors[i2]+' type:'+ja['repo:assetType']+' name:'+ja['repo:name']);
+        if(ja['repo:assetType']==='pdf-space'){collUrn=ancestors[i2];break;}}catch(pe){}}
+    }
   }
   log('COLLECTION: '+collUrn);
   log('owner: '+j1['repo:createdBy']);
